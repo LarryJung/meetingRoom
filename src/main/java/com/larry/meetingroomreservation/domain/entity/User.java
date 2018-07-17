@@ -42,6 +42,26 @@ public class User extends AbstractEntity{
         this.roleName = roleName;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public RoleName getRoleName() {
+        return roleName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
