@@ -19,24 +19,4 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    @PostConstruct
-    private void iniDataForTesting() {
-        User larry = User.builder()
-                .userId("larry")
-                .password("test")
-                .name("jung")
-                .email("larry@gmail.com")
-                .roleName(RoleName.ADMIN)
-                .build();
-        User charry = User.builder()
-                .userId("charry")
-                .password("test")
-                .name("chae")
-                .roleName(RoleName.USER)
-                .email("charry@gmail.com").build();
-
-        userRepository.save(larry);
-        userRepository.save(charry);
-    }
-
 }

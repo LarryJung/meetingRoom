@@ -14,11 +14,12 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 필요없다.
     @Column(nullable = false)
     private boolean reservable = true;
 
-    @Column(nullable = false)
-    private String roomName;
+    @Column(nullable = false, unique = true)
+    private Integer roomName;
 
     @Min(3)
     @Column(nullable = false)
@@ -29,7 +30,7 @@ public class Room {
     }
 
     @Builder
-    public Room(String roomName, int occupancy) {
+    public Room(int roomName, int occupancy) {
         this.roomName = roomName;
         this.occupancy = occupancy;
     }
@@ -42,7 +43,7 @@ public class Room {
         return reservable;
     }
 
-    public String getRoomName() {
+    public Integer getRoomName() {
         return roomName;
     }
 
@@ -56,9 +57,9 @@ public class Room {
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
         return reservable == room.reservable &&
-                occupancy == room.occupancy &&
                 Objects.equals(id, room.id) &&
-                Objects.equals(roomName, room.roomName);
+                Objects.equals(roomName, room.roomName) &&
+                Objects.equals(occupancy, room.occupancy);
     }
 
     @Override

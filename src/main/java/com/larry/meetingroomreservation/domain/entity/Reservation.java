@@ -1,14 +1,17 @@
 package com.larry.meetingroomreservation.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.larry.meetingroomreservation.domain.entity.support.validator.EndTimeMustBeAfterStartTime;
+import com.larry.meetingroomreservation.domain.entity.support.validator.ThirtyMinutesUnit;
 import lombok.Builder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@EndTimeMustBeAfterStartTime(message = "종료 시간은 시작 시간보다 빠를 수 없습니다.")
 @Entity
 public class Reservation {
 
@@ -16,20 +19,25 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ThirtyMinutesUnit
+    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     @Column
     private LocalDateTime startTime;
 
+    @ThirtyMinutesUnit
+    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     @Column
     private LocalDateTime endTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column
     private LocalDate reservedDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private Room reservedRoom;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private User booker;
 
@@ -97,5 +105,25 @@ public class Reservation {
     public int hashCode() {
 
         return Objects.hash(id, startTime, endTime, reservedDate, reservedRoom, booker, numberOfAttendee);
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", reservedDate=" + reservedDate +
+                ", reservedRoom=" + reservedRoom.getRoomName() +
+                ", booker=" + booker.getUserId() +
+                ", numberOfAttendee=" + numberOfAttendee +
+                '}';
+    }
+
+    public boolean isOverlap(Reservation target) {
+        if (this.booker.equals(target.booker)) {
+            return true;
+        }
+        return !(this.startTime.isAfter(target.endTime) && target.startTime.isAfter(this.endTime));
     }
 }
