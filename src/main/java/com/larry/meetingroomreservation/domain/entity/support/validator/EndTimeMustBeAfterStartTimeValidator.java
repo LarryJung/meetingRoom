@@ -1,13 +1,17 @@
 package com.larry.meetingroomreservation.domain.entity.support.validator;
 
 import com.larry.meetingroomreservation.domain.entity.Reservation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class EndTimeMustBeAfterStartTimeValidator implements ConstraintValidator<EndTimeMustBeAfterStartTime, Reservation>{
-    private String message;
 
+    private final Logger log = LoggerFactory.getLogger(EndTimeMustBeAfterStartTimeValidator.class);
+
+    private String message;
 
     @Override
     public void initialize(EndTimeMustBeAfterStartTime constraintAnnotation) {
@@ -16,11 +20,12 @@ public class EndTimeMustBeAfterStartTimeValidator implements ConstraintValidator
 
     @Override
     public boolean isValid(Reservation value, ConstraintValidatorContext context) {
+        log.info("reserve time : {}", value);
         if (value.getStartTime() == null || value.getEndTime() == null) {
-            return false;
+            throw new RuntimeException("시작시간 끝시간이 중복됩니다.");
         }
         if (!value.getEndTime().isAfter(value.getStartTime())) {
-            throw new RuntimeException("오류오류");
+            throw new RuntimeException("시작 시간이 먼저여야 합니다.");
         }
         return true;
     }

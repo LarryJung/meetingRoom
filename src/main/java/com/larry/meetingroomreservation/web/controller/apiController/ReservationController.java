@@ -1,7 +1,12 @@
-package com.larry.meetingroomreservation.web.controller;
+package com.larry.meetingroomreservation.web.controller.apiController;
 
 import com.larry.meetingroomreservation.domain.entity.Reservation;
+import com.larry.meetingroomreservation.domain.entity.Room;
+import com.larry.meetingroomreservation.domain.entity.User;
+import com.larry.meetingroomreservation.domain.entity.dto.ReservationDto;
+import com.larry.meetingroomreservation.domain.entity.support.RoleName;
 import com.larry.meetingroomreservation.service.ReservationService;
+import com.larry.meetingroomreservation.service.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,9 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private RoomService roomService;
+
     @GetMapping("/{reservedDate}/rooms/{roomId}")
     public ResponseEntity<List<Reservation>> retrieveReservation(@PathVariable String reservedDate, @PathVariable Long roomId) {
         List<Reservation> reservations = reservationService.findAllByDateAndRoom(reservedDate, roomId);
@@ -30,9 +38,14 @@ public class ReservationController {
                 .body(reservations);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> registerReservation(@RequestBody @Valid Reservation reservation) {
-        log.info("register reservation : {}", reservation.toString());
+    @PostMapping("/{reservedDate}/rooms/{roomId}")
+    public ResponseEntity<Void> registerReservation(@RequestBody ReservationDto target, @PathVariable Long roomId) {
+        User loginUser = new User("larry", "test", "jung", "larry@gmail.com", RoleName.ADMIN);
+        Room room = roomService.findById(roomId);
+        @Valid Reservation reservation = target.toEntity();
+        reservation.bookBy(loginUser);
+        reservation.bookRoom(room);
+        log.info("register reservation : {}", reservation);
         reservationService.reserve(reservation);
         return ResponseEntity.ok().build();
     }

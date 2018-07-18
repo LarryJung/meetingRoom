@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)
 public @interface ThirtyMinutesUnit {
-    String message() default "기본 메시지랍니다.";
+    String message() default "시간은 30분 단위로 예약 가능합니다.";
 
     Class<?>[] groups() default {};
 

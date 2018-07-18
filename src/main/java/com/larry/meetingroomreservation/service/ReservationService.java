@@ -25,11 +25,11 @@ public class ReservationService {
         return reservationRepository.findAllByReservedDateAndReservedRoomId(localDate, roomId);
     }
 
-    public void reserve(Reservation reservation) {
+    public Reservation reserve(Reservation reservation) {
         if (isReservable(reservation)) {
-            reservationRepository.save(reservation);
+            return reservationRepository.save(reservation);
         }
-        throw new AlreadyReservedException("이미 예약된 회의실입니다.");
+        throw new RuntimeException("예약할 수 없습니다.");
     }
 
     private boolean isReservable(Reservation reservation) {
@@ -38,6 +38,6 @@ public class ReservationService {
         if (reservations.isEmpty()) {
             return true;
         }
-        return !reservations.stream().anyMatch(r -> r.isOverlap(reservation));
+        return reservations.stream().noneMatch(r -> r.isOverlap(reservation));
     }
 }

@@ -1,1 +1,59 @@
-예약 현황 페이지
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/js/link/handlebars-v4.0.11.js"></script>
+    <title>회의실 예약 사이트</title>
+</head>
+<body>
+<p id="day"> {{day}}</p> 회의실 예약 현황
+<p id="room-name"> {{room.roomName}}</p> 회의실 예약 현황
+수용 인원 <p id="occupancy">{{room.occupancy}}</p>
+<p id="room-id" hidden > {{room.id}}</p>
+
+<script id="entry-template" type="text/x-handlebars-template">
+    <table>
+        <thead>
+        <th style="text-align:center">시작 시간</th>
+        <th style="text-align:center">종료 시간</th>
+        <th style="text-align:center">예약자</th>
+        <th style="text-align:center">기능</th>
+        </thead>
+        <tbody>
+        \{{#each .}}
+        <tr>
+            <td>\{{startTime}}</td>
+            <td style="text-align:center">\{{endTime}}</td>
+            <td style="text-align:center">\{{booker.userId}}</td>
+            <td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">취소</button></td>
+        </tr>
+        \{{/each}}
+        </tbody>
+    </table>
+</script>
+
+<form id="reservation-form" action="/api/reservations/{{day}}/rooms/{{room.id}}">
+    <div class="form-group">
+        <label for="reserved-date"> 예약 날짜 </label>
+        <input type="date" class="form-control" id="reserved-date">
+    </div>
+    <div class="form-group">
+        <label for="start-time"> 시작 시간 </label>
+        <input type="datetime-local" class="form-control" id="start-time">
+    </div>
+    <div class="form-group">
+        <label for="end-time"> 종료 시간</label>
+        <input type="datetime-local" class="form-control" id="end-time">
+    </div>
+    <div class="form-group">
+        <label for="number-of-attendee"> 참여 인원 </label>
+        <input type="number" class="form-control" id="number-of-attendee" placeholder="참여 인원 수를 적어주세">
+    </div>
+    <button type="button" class="btn btn-primary" id="btnSave">등록</button>
+</form>
+
+<script type="text/javascript" src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/show.js"></script>
+
+</body>
+</html>

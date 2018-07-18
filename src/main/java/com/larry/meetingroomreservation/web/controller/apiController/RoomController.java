@@ -1,4 +1,4 @@
-package com.larry.meetingroomreservation.web.controller;
+package com.larry.meetingroomreservation.web.controller.apiController;
 
 import com.larry.meetingroomreservation.domain.entity.Room;
 import com.larry.meetingroomreservation.service.RoomService;

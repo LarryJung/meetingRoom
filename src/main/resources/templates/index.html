@@ -3,7 +3,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="/js/link/handlebars-v4.0.11.js"></script>
-
     <title>회의실 예약 사이트</title>
 </head>
 <body>
@@ -26,8 +25,8 @@
         <tr>
             <td>\{{roomName}}</td>
             <td style="text-align:center">\{{occupancy}}</td>
-            <td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">예약 상황</button></td>
-            <!--<td><a href="/api/reservations/\{{id}}">예약 상태 보기</a></td>-->
+            <!--<td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">예약 상황</button></td>-->
+            <td><a href="/reservations/rooms/\{{id}}">예약 상태 보기</a></td>
         </tr>
         \{{/each}}
         </tbody>

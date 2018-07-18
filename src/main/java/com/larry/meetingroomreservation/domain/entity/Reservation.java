@@ -1,8 +1,11 @@
 package com.larry.meetingroomreservation.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.larry.meetingroomreservation.domain.entity.support.AbstractEntity;
 import com.larry.meetingroomreservation.domain.entity.support.validator.EndTimeMustBeAfterStartTime;
 import com.larry.meetingroomreservation.domain.entity.support.validator.ThirtyMinutesUnit;
+import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
+import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
 import lombok.Builder;
 
 import javax.persistence.*;
@@ -13,23 +16,16 @@ import java.util.Objects;
 
 @EndTimeMustBeAfterStartTime(message = "종료 시간은 시작 시간보다 빠를 수 없습니다.")
 @Entity
-public class Reservation {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Reservation extends AbstractEntity{
 
     @ThirtyMinutesUnit
-    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     @Column
     private LocalDateTime startTime;
 
     @ThirtyMinutesUnit
-    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     @Column
     private LocalDateTime endTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column
     private LocalDate reservedDate;
 
@@ -59,10 +55,6 @@ public class Reservation {
         this.numberOfAttendee = numberOfAttendee;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -87,43 +79,54 @@ public class Reservation {
         return numberOfAttendee;
     }
 
+    public boolean isOverlap(Reservation target) {
+        if (this.booker.equals(target.booker)) {
+            throw new CannotReserveSameBookerPerDayException("예약은 해당 날짜에 1번만 가능합니다.");
+        }
+        if (target.endTime.isAfter(this.startTime) && this.endTime.isAfter(target.startTime)) {
+            throw new AlreadyReservedException("겹치는 시간입니다.");
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return numberOfAttendee == that.numberOfAttendee &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(startTime, that.startTime) &&
+        return Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime) &&
                 Objects.equals(reservedDate, that.reservedDate) &&
                 Objects.equals(reservedRoom, that.reservedRoom) &&
-                Objects.equals(booker, that.booker);
+                Objects.equals(booker, that.booker) &&
+                Objects.equals(numberOfAttendee, that.numberOfAttendee);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, startTime, endTime, reservedDate, reservedRoom, booker, numberOfAttendee);
+        return Objects.hash(startTime, endTime, reservedDate, reservedRoom, booker, numberOfAttendee);
     }
 
     @Override
     public String toString() {
         return "Reservation{" +
-                "id=" + id +
-                ", startTime=" + startTime +
+                "startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", reservedDate=" + reservedDate +
                 ", reservedRoom=" + reservedRoom.getRoomName() +
-                ", booker=" + booker.getUserId() +
+                ", booker=" + booker.getName() +
                 ", numberOfAttendee=" + numberOfAttendee +
                 '}';
     }
 
-    public boolean isOverlap(Reservation target) {
-        if (this.booker.equals(target.booker)) {
-            return true;
-        }
-        return !(this.startTime.isAfter(target.endTime) && target.startTime.isAfter(this.endTime));
+    public Reservation bookBy(User loginUser) {
+        this.booker = loginUser;
+        return this;
+    }
+
+    public Reservation bookRoom(Room room) {
+        this.reservedRoom = room;
+        return this;
     }
 }
