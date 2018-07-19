@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class CannotReserveSameBookerPerDayException extends RuntimeException {
+public class EndTimeMustBeAfterStartTimeException extends RuntimeException {
 
-    public CannotReserveSameBookerPerDayException(String defaultMessage) {
+    public EndTimeMustBeAfterStartTimeException(String defaultMessage) {
         super(defaultMessage);
     }
-}
 
+}

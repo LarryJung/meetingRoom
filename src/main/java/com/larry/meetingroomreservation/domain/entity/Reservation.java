@@ -7,6 +7,7 @@ import com.larry.meetingroomreservation.domain.entity.support.validator.ThirtyMi
 import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
 import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
 import lombok.Builder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -14,18 +15,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@EndTimeMustBeAfterStartTime(message = "종료 시간은 시작 시간보다 빠를 수 없습니다.")
 @Entity
 public class Reservation extends AbstractEntity{
 
-    @ThirtyMinutesUnit
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm") // 이것은 출력 시..
     @Column
     private LocalDateTime startTime;
 
-    @ThirtyMinutesUnit
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column
     private LocalDateTime endTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column
     private LocalDate reservedDate;
 
