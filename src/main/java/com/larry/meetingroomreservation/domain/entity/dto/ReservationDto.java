@@ -16,7 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Setter
 @Getter
@@ -26,11 +26,11 @@ public class ReservationDto extends AbstractEntity {
 
     @ThirtyMinutesUnit
     @DateTimeFormat
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @ThirtyMinutesUnit
     @DateTimeFormat
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @DateTimeFormat
     private LocalDate reservedDate;
@@ -39,7 +39,7 @@ public class ReservationDto extends AbstractEntity {
     private Integer numberOfAttendee;
 
     @Builder
-    public ReservationDto(LocalDateTime startTime, LocalDateTime endTime, LocalDate reservedDate, @Min(3) Integer numberOfAttendee) {
+    public ReservationDto(LocalTime startTime, LocalTime endTime, LocalDate reservedDate, @Min(3) Integer numberOfAttendee) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.reservedDate = reservedDate;

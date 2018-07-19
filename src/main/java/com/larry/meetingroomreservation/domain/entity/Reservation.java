@@ -7,24 +7,28 @@ import com.larry.meetingroomreservation.domain.entity.support.validator.ThirtyMi
 import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
 import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
+@Getter
 @Entity
 public class Reservation extends AbstractEntity{
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm") // 이것은 출력 시..
+    @JsonFormat(pattern = "HH:mm") // 이것은 출력 시..
     @Column
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "HH:mm")
     @Column
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column
@@ -47,37 +51,13 @@ public class Reservation extends AbstractEntity{
     }
 
     @Builder
-    public Reservation(LocalDateTime startTime, LocalDateTime endTime, LocalDate reservedDate, Room reservedRoom, User booker, int numberOfAttendee) {
+    public Reservation(LocalTime startTime, LocalTime endTime, LocalDate reservedDate, Room reservedRoom, User booker, int numberOfAttendee) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.reservedDate = reservedDate;
         this.reservedRoom = reservedRoom;
         this.booker = booker;
         this.numberOfAttendee = numberOfAttendee;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public LocalDate getReservedDate() {
-        return reservedDate;
-    }
-
-    public Room getReservedRoom() {
-        return reservedRoom;
-    }
-
-    public User getBooker() {
-        return booker;
-    }
-
-    public int getNumberOfAttendee() {
-        return numberOfAttendee;
     }
 
     public boolean isOverlap(Reservation target) {
@@ -129,5 +109,9 @@ public class Reservation extends AbstractEntity{
     public Reservation bookRoom(Room room) {
         this.reservedRoom = room;
         return this;
+    }
+
+    public boolean isPossibleAttendeeNumber() {
+        return reservedRoom.isPossibleAttendeeNumber(this.numberOfAttendee);
     }
 }

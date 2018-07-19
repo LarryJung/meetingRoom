@@ -24,11 +24,13 @@ public class EndTimeMustBeAfterStartTimeValidator implements ConstraintValidator
     public boolean isValid(ReservationDto value, ConstraintValidatorContext context) {
         if (value.getStartTime() == null || value.getEndTime() == null) {
             log.info("끝시간 시작시간 중복");
-            throw new EndTimeMustBeAfterStartTimeException("시작시간 끝시간이 중복됩니다.");
+            return false;
+//            throw new EndTimeMustBeAfterStartTimeException("시작시간 끝시간이 중복됩니다.");
         }
         if (!value.getEndTime().isAfter(value.getStartTime())) {
             log.info("끝시간이 먼저임");
-            throw new EndTimeMustBeAfterStartTimeException("시작 시간이 먼저여야 합니다.");
+            return false;
+//            throw new EndTimeMustBeAfterStartTimeException("시작 시간이 먼저여야 합니다.");
         }
         return true;
     }

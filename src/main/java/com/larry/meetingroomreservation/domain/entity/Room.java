@@ -67,4 +67,8 @@ public class Room {
 
         return Objects.hash(id, reservable, roomName, occupancy);
     }
+
+    public boolean isPossibleAttendeeNumber(int numberOfAttendee) {
+        return occupancy >= numberOfAttendee;
+    }
 }

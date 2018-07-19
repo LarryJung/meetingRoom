@@ -5,14 +5,14 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class ThirtyMinutesUnitValidator implements ConstraintValidator<ThirtyMinutesUnit, LocalDateTime> {
+public class ThirtyMinutesUnitValidator implements ConstraintValidator<ThirtyMinutesUnit, LocalTime> {
     @Override
     public void initialize(ThirtyMinutesUnit constraintAnnotation) {
 
     }
 
     @Override
-    public boolean isValid(LocalDateTime value, ConstraintValidatorContext context) {
+    public boolean isValid(LocalTime value, ConstraintValidatorContext context) {
         if (value == null) {
             return false;
         }

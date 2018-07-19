@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,10 +39,7 @@ public class ReservationController {
     }
 
     @PostMapping("/{reservedDate}/rooms/{roomId}")
-    public ResponseEntity<Void> registerReservation(@RequestBody @Valid ReservationDto target, @PathVariable Long roomId, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.info("valid error : {}", bindingResult.toString());
-        }
+    public ResponseEntity<Void> registerReservation(@RequestBody @Valid ReservationDto target, @PathVariable Long roomId) {
         User loginUser = new User("larry", "test", "jung", "larry@gmail.com", RoleName.ADMIN);
         Room room = roomService.findById(roomId);
         Reservation reservation = target.toEntity();
