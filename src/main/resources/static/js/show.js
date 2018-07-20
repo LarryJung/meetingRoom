@@ -29,7 +29,7 @@ $('#btnSave').click(function (e) {
         reservedDate: $('#reserved-date').val(),
         startTime: $('#start-time').val(),
         endTime: $('#end-time').val(),
-        numberOfAttendee: $('#number-of-attendee').val()
+        numberOfAttendee: $('#number-of-attendee').val(),
     };
     console.log(reservation);
     $.ajax({

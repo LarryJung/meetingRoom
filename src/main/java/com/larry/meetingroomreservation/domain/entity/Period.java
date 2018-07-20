@@ -34,15 +34,14 @@ public class Period {
         assertNotNull(startTime);
         assertNotNull(endTime);
         if (!endTime.isAfter(startTime)) {
-            throw new EndTimeMustBeAfterStartTimeException("끝시간 시작시간 지켜주세요.");
+            throw new EndTimeMustBeAfterStartTimeException("시작시간은 끝나는 시간 이전이어야 합니다.");
         }
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
     public Period(LocalTime startTime, LocalTime endTime) {
-        this.startTime = new ThirtyMinuteUnit(startTime);
-        this.endTime = new ThirtyMinuteUnit(endTime);
+        new Period(new ThirtyMinuteUnit(startTime), new ThirtyMinuteUnit(endTime));
     }
 
     public boolean isTimeOverlap(Period target) {

@@ -1,7 +1,6 @@
-package com.larry.meetingroomreservation.domain.entity.support;
+package com.larry.meetingroomreservation.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.larry.meetingroomreservation.domain.entity.Period;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -34,6 +33,5 @@ public class MeetingTime {
 
     public boolean isTimeOverlap(MeetingTime target) {
         return this.reservedDate.equals(target.reservedDate) && (this.period.isTimeOverlap(target.period));
-
     }
 }

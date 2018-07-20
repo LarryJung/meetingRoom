@@ -2,6 +2,7 @@ package com.larry.meetingroomreservation.domain.entity.dto;
 
 
 import com.larry.meetingroomreservation.domain.entity.Reservation;
+import com.larry.meetingroomreservation.domain.entity.Room;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,10 +28,9 @@ public class ReservationRequestDto {
 
     private Integer numberOfAttendee;
 
-    public Reservation toEntity() {
-        return new Reservation(reservedDate, startTime, endTime, numberOfAttendee);
+    public Reservation toEntity(Room room) {
+        return new Reservation(reservedDate, startTime, endTime, numberOfAttendee, room);
     }
-
 
 }
 

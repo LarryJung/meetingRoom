@@ -28,8 +28,8 @@ public class ReservationService {
     }
 
     public Reservation reserve(User loginUser, ReservationRequestDto target, Room room) {
-        Reservation reservation = target.toEntity();
-        reservation.bookBy(loginUser).assignRoom(room);
+        Reservation reservation = target.toEntity(room);
+        reservation.bookBy(loginUser);
         if (!isReservable(reservation)) {
             throw new RuntimeException("예약할 수 없습니다.");
         }

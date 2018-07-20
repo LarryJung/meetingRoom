@@ -1,7 +1,6 @@
 package com.larry.meetingroomreservation.domain.entity;
 
 import com.larry.meetingroomreservation.domain.entity.support.AbstractEntity;
-import com.larry.meetingroomreservation.domain.entity.support.MeetingTime;
 import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
 import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
 import com.larry.meetingroomreservation.domain.exceptions.ExcessAttendeeException;
@@ -37,14 +36,17 @@ public class Reservation extends AbstractEntity{
     @Column
     private Integer numberOfAttendee;
 
-    public Reservation(MeetingTime meetingTime, Integer numberOfAttendee) {
+    public Reservation(MeetingTime meetingTime, Integer numberOfAttendee, Room room) {
         this.meetingTime = meetingTime;
+        if (!room.isPossibleAttendeeNumber(numberOfAttendee)) {
+            throw new ExcessAttendeeException(String.format("인원 초과입니다. 허용인원 : %d", room.getOccupancy()));
+        }
         this.numberOfAttendee = numberOfAttendee;
+        this.reservedRoom = room;
     }
 
-    public Reservation(LocalDate reservedDate, LocalTime startTime, LocalTime endTime, Integer numberOfAttendee) {
-        this.meetingTime = new MeetingTime(reservedDate, new Period(startTime, endTime));
-        this.numberOfAttendee = numberOfAttendee;
+    public Reservation(LocalDate reservedDate, LocalTime startTime, LocalTime endTime, Integer numberOfAttendee, Room room) {
+        this(new MeetingTime(reservedDate, new Period(startTime, endTime)), numberOfAttendee, room);
     }
 
     public boolean isOverlap(Reservation target) {
@@ -60,18 +62,6 @@ public class Reservation extends AbstractEntity{
     public Reservation bookBy(User loginUser) {
         this.booker = loginUser;
         return this;
-    }
-
-    public Reservation assignRoom(Room reserveRoom) {
-        if (!isPossibleAttendeeNumber(reserveRoom)) {
-            throw new ExcessAttendeeException(String.format("인원 초과입니다. 허용인원 : %d", reserveRoom.getOccupancy()));
-        }
-        this.reservedRoom = reserveRoom;
-        return this;
-    }
-
-    public boolean isPossibleAttendeeNumber(Room reservedRoom) {
-        return reservedRoom.isPossibleAttendeeNumber(this.numberOfAttendee);
     }
 
     public LocalDate getReservedDate() {
