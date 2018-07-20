@@ -36,7 +36,6 @@ public class ReservationTest {
     private Room room101 = new Room(101, OCCUPANCY);
     private Reservation reservation;
 
-
     @Before
     public void setup() {
         reservation = Reservation.builder().booker(larry).reservedRoom(room101).build();

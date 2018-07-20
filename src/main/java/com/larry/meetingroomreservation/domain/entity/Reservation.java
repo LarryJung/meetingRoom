@@ -1,5 +1,6 @@
 package com.larry.meetingroomreservation.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.larry.meetingroomreservation.domain.entity.support.AbstractEntity;
 import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
 import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Builder
 @AllArgsConstructor
@@ -21,6 +23,7 @@ import java.time.LocalTime;
 @Entity
 public class Reservation extends AbstractEntity{
 
+    @JsonUnwrapped
     @Embedded
     private MeetingTime meetingTime;
 
@@ -66,5 +69,32 @@ public class Reservation extends AbstractEntity{
 
     public LocalDate getReservedDate() {
         return this.meetingTime.getReservedDate();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(meetingTime, that.meetingTime) &&
+                Objects.equals(reservedRoom, that.reservedRoom) &&
+                Objects.equals(booker, that.booker) &&
+                Objects.equals(numberOfAttendee, that.numberOfAttendee);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(meetingTime, reservedRoom, booker, numberOfAttendee);
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "meetingTime=" + meetingTime +
+                ", reservedRoom=" + reservedRoom.getRoomName() +
+                ", booker=" + booker.getUserId() +
+                ", numberOfAttendee=" + numberOfAttendee +
+                '}';
     }
 }

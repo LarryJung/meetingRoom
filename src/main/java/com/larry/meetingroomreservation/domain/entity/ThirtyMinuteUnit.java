@@ -11,13 +11,12 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @NoArgsConstructor
 @Setter
-@Getter
 @Data
 @Embeddable
 public class ThirtyMinuteUnit {
 
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime localTime;
+    private LocalTime time;
 
     public ThirtyMinuteUnit(LocalTime localTime) {
         assertNotNull(localTime);
@@ -27,7 +26,7 @@ public class ThirtyMinuteUnit {
         if (!isPossibleHour(localTime)) {
             throw new PossibleHourException("10시에서 18시 사이의 시간만 예약 가능합니다.");
         }
-        this.localTime = localTime;
+        this.time = localTime;
     }
 
     private boolean isThirtyMinuteUnit(LocalTime localTime) {
@@ -39,6 +38,6 @@ public class ThirtyMinuteUnit {
     }
 
     public boolean isAfter(ThirtyMinuteUnit target) {
-        return this.localTime.isAfter(target.localTime);
+        return this.time.isAfter(target.time);
     }
 }

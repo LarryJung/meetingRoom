@@ -15,7 +15,6 @@ import java.time.LocalTime;
 @Data
 @Setter
 @Getter
-@NoArgsConstructor
 public class ReservationRequestDto {
 
     private LocalDate reservedDate;
@@ -27,6 +26,17 @@ public class ReservationRequestDto {
     private LocalTime endTime;
 
     private Integer numberOfAttendee;
+
+    public ReservationRequestDto() {
+
+    }
+
+    public ReservationRequestDto(LocalDate reservedDate, LocalTime startTime, LocalTime endTime, Integer numberOfAttendee) {
+        this.reservedDate = reservedDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.numberOfAttendee = numberOfAttendee;
+    }
 
     public Reservation toEntity(Room room) {
         return new Reservation(reservedDate, startTime, endTime, numberOfAttendee, room);

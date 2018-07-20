@@ -1,5 +1,6 @@
 package com.larry.meetingroomreservation.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.larry.meetingroomreservation.domain.exceptions.EndTimeMustBeAfterStartTimeException;
 import lombok.*;
 
@@ -18,12 +19,14 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 @Embeddable
 public class Period {
 
+    @JsonUnwrapped(prefix = "start_")
     @Embedded
-    @AttributeOverride(name = "localTime", column = @Column(name = "START_TIME", nullable = false))
+    @AttributeOverride(name = "time", column = @Column(name = "START_TIME", nullable = false))
     private ThirtyMinuteUnit startTime;
 
+    @JsonUnwrapped(prefix = "end_")
     @Embedded
-    @AttributeOverride(name = "localTime", column = @Column(name = "END_TIME", nullable = false))
+    @AttributeOverride(name = "time", column = @Column(name = "END_TIME", nullable = false))
     private ThirtyMinuteUnit endTime;
 
     public Period () {
@@ -41,7 +44,7 @@ public class Period {
     }
 
     public Period(LocalTime startTime, LocalTime endTime) {
-        new Period(new ThirtyMinuteUnit(startTime), new ThirtyMinuteUnit(endTime));
+        this(new ThirtyMinuteUnit(startTime), new ThirtyMinuteUnit(endTime));
     }
 
     public boolean isTimeOverlap(Period target) {

@@ -33,6 +33,7 @@ public class ReservationService {
         if (!isReservable(reservation)) {
             throw new RuntimeException("예약할 수 없습니다.");
         }
+        log.info("now save reservation! : {}", reservation);
         return reservationRepository.save(reservation);
     }
 

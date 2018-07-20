@@ -1,6 +1,7 @@
 package com.larry.meetingroomreservation.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @Embeddable
 public class MeetingTime {
 
+    @JsonUnwrapped
     @Embedded
     private Period period;
 
