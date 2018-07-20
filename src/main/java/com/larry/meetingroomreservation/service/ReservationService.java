@@ -3,9 +3,8 @@ package com.larry.meetingroomreservation.service;
 import com.larry.meetingroomreservation.domain.entity.Reservation;
 import com.larry.meetingroomreservation.domain.entity.Room;
 import com.larry.meetingroomreservation.domain.entity.User;
-import com.larry.meetingroomreservation.domain.entity.dto.ReservationDto;
+import com.larry.meetingroomreservation.domain.entity.dto.ReservationRequestDto;
 import com.larry.meetingroomreservation.domain.repository.ReservationRepository;
-import com.larry.meetingroomreservation.domain.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +21,13 @@ public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<Reservation> findAllByDateAndRoom(String reservedDate, Room reservedRoom) {
+    public List<Reservation> findAllByDateAndRoomId(String reservedDate, Long roomId) {
         LocalDate localDate = LocalDate.parse(reservedDate);
         log.info("local date : {}", localDate);
-        return reservationRepository.findAllByReservedDateAndReservedRoom(localDate, reservedRoom);
+        return reservationRepository.findAllByMeetingTimeReservedDateAndReservedRoomId(localDate, roomId);
     }
 
-    public Reservation reserve(User loginUser, ReservationDto target, Room room) {
+    public Reservation reserve(User loginUser, ReservationRequestDto target, Room room) {
         Reservation reservation = target.toEntity();
         reservation.bookBy(loginUser).assignRoom(room);
         if (!isReservable(reservation)) {
@@ -38,7 +37,7 @@ public class ReservationService {
     }
 
     private boolean isReservable(Reservation reservation) {
-        List<Reservation> reservations = reservationRepository.findAllByReservedDateAndReservedRoom(
+        List<Reservation> reservations = reservationRepository.findAllByMeetingTimeReservedDateAndReservedRoom(
                 reservation.getReservedDate(), reservation.getReservedRoom());
         if (reservations.isEmpty()) {
             return true;

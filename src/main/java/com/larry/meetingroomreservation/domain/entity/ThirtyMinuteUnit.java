@@ -17,7 +17,6 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 @Embeddable
 public class ThirtyMinuteUnit {
 
-    @DateTimeFormat
     @JsonFormat(pattern = "HH:mm")
     private LocalTime localTime;
 

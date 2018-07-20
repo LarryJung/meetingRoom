@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
+import java.time.LocalTime;
+
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Data
@@ -36,6 +38,11 @@ public class Period {
         }
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public Period(LocalTime startTime, LocalTime endTime) {
+        this.startTime = new ThirtyMinuteUnit(startTime);
+        this.endTime = new ThirtyMinuteUnit(endTime);
     }
 
     public boolean isTimeOverlap(Period target) {

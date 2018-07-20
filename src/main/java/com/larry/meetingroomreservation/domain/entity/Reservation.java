@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Builder
 @AllArgsConstructor
@@ -38,6 +39,11 @@ public class Reservation extends AbstractEntity{
 
     public Reservation(MeetingTime meetingTime, Integer numberOfAttendee) {
         this.meetingTime = meetingTime;
+        this.numberOfAttendee = numberOfAttendee;
+    }
+
+    public Reservation(LocalDate reservedDate, LocalTime startTime, LocalTime endTime, Integer numberOfAttendee) {
+        this.meetingTime = new MeetingTime(reservedDate, new Period(startTime, endTime));
         this.numberOfAttendee = numberOfAttendee;
     }
 

@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 
-    List<Reservation> findAllByReservedDateAndReservedRoom(LocalDate reservedDate, Room reservedRoom);
+    List<Reservation> findAllByMeetingTimeReservedDateAndReservedRoomId(LocalDate reservedDate, Long reservedRoomId);
+    List<Reservation> findAllByMeetingTimeReservedDateAndReservedRoom(LocalDate reservedDate, Room reservedRoom);
 }

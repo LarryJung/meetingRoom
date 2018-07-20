@@ -22,8 +22,8 @@
         <tbody>
         \{{#each .}}
         <tr>
-            <td>\{{startTime}}</td>
-            <td style="text-align:center">\{{endTime}}</td>
+            <td>\{{meetingTime.period.startTime.localTime}}</td>
+            <td style="text-align:center">\{{meetingTime.period.endTime.localTime}}</td>
             <td style="text-align:center">\{{booker.userId}}</td>
             <td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">취소</button></td>
         </tr>
