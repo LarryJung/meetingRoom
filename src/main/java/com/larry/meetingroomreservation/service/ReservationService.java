@@ -1,9 +1,11 @@
 package com.larry.meetingroomreservation.service;
 
 import com.larry.meetingroomreservation.domain.entity.Reservation;
-import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
-import com.larry.meetingroomreservation.domain.exceptions.ExcessAttendeeExceptioon;
+import com.larry.meetingroomreservation.domain.entity.Room;
+import com.larry.meetingroomreservation.domain.entity.User;
+import com.larry.meetingroomreservation.domain.entity.dto.ReservationDto;
 import com.larry.meetingroomreservation.domain.repository.ReservationRepository;
+import com.larry.meetingroomreservation.domain.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,28 +22,28 @@ public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<Reservation> findAllByDateAndRoom(String reservedDate, Long roomId) {
+    public List<Reservation> findAllByDateAndRoom(String reservedDate, Room reservedRoom) {
         LocalDate localDate = LocalDate.parse(reservedDate);
         log.info("local date : {}", localDate);
-        return reservationRepository.findAllByReservedDateAndReservedRoomId(localDate, roomId);
+        return reservationRepository.findAllByReservedDateAndReservedRoom(localDate, reservedRoom);
     }
 
-    public Reservation reserve(Reservation reservation) {
-        if (isReservable(reservation)) {
-            return reservationRepository.save(reservation);
+    public Reservation reserve(User loginUser, ReservationDto target, Room room) {
+        Reservation reservation = target.toEntity();
+        reservation.bookBy(loginUser).assignRoom(room);
+        if (!isReservable(reservation)) {
+            throw new RuntimeException("예약할 수 없습니다.");
         }
-        throw new RuntimeException("예약할 수 없습니다.");
+        return reservationRepository.save(reservation);
     }
 
     private boolean isReservable(Reservation reservation) {
-        List<Reservation> reservations = reservationRepository.findAllByReservedDateAndReservedRoomId(
-                reservation.getReservedDate(), reservation.getReservedRoom().getId());
+        List<Reservation> reservations = reservationRepository.findAllByReservedDateAndReservedRoom(
+                reservation.getReservedDate(), reservation.getReservedRoom());
         if (reservations.isEmpty()) {
             return true;
         }
-        if(!reservation.isPossibleAttendeeNumber()) {
-            throw new ExcessAttendeeExceptioon(String.format("인원 초과입니다. 허용인원 : %d", reservation.getReservedRoom().getOccupancy()));
-        }
         return reservations.stream().noneMatch(r -> r.isOverlap(reservation));
     }
+
 }

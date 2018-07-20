@@ -14,10 +14,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 필요없다.
-    @Column(nullable = false)
-    private boolean reservable = true;
-
     @Column(nullable = false, unique = true)
     private Integer roomName;
 
@@ -39,10 +35,6 @@ public class Room {
         return id;
     }
 
-    public boolean isReservable() {
-        return reservable;
-    }
-
     public Integer getRoomName() {
         return roomName;
     }
@@ -51,13 +43,16 @@ public class Room {
         return occupancy;
     }
 
+    public boolean isPossibleAttendeeNumber(int numberOfAttendee) {
+        return occupancy >= numberOfAttendee;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return reservable == room.reservable &&
-                Objects.equals(id, room.id) &&
+        return Objects.equals(id, room.id) &&
                 Objects.equals(roomName, room.roomName) &&
                 Objects.equals(occupancy, room.occupancy);
     }
@@ -65,10 +60,15 @@ public class Room {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, reservable, roomName, occupancy);
+        return Objects.hash(id, roomName, occupancy);
     }
 
-    public boolean isPossibleAttendeeNumber(int numberOfAttendee) {
-        return occupancy >= numberOfAttendee;
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", roomName=" + roomName +
+                ", occupancy=" + occupancy +
+                '}';
     }
 }
