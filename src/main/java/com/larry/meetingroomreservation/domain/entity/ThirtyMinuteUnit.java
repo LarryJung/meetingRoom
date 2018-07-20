@@ -1,11 +1,13 @@
 package com.larry.meetingroomreservation.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.larry.meetingroomreservation.domain.exceptions.ThirtyMinutesUnitException;
 import java.time.LocalTime;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 public class ThirtyMinuteUnit {
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime localTime;
 
     public ThirtyMinuteUnit(LocalTime localTime) {
