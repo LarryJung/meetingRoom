@@ -20,6 +20,16 @@ $(document).ready(function () {
     });
 });
 
+$(document).on("click", "#reservation-state", function(e){
+    console.log(this)
+    e.preventDefault();
+    var today = getToday();
+    var roomId = $(this).attr("value");
+    var url = '/reservations/'+today+'/rooms/'+roomId;
+    console.log(url);
+    redirect(url);
+})
+
 $(document).on("click", "#show-reservation", function(){
     // var url = "../templates/reservation/show.html";
     // console.log(url);
@@ -36,6 +46,24 @@ $(document).on("click", "#show-reservation", function(){
 //         redirect(url);
 //     });
 // });
+
+function getToday() {
+    var today = new Date();
+    var dd = today.getDate();
+
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(dd<10)
+    {
+        dd='0'+dd;
+    }
+
+    if(mm<10)
+    {
+        mm='0'+mm;
+    }
+    return yyyy+'-'+mm+'-'+dd;
+}
 
 function redirect(url) {
     window.location.replace(url);

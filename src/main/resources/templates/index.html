@@ -26,7 +26,7 @@
             <td>\{{roomName}}</td>
             <td style="text-align:center">\{{occupancy}}</td>
             <!--<td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">예약 상황</button></td>-->
-            <td><a href="/reservations/rooms/\{{id}}">예약 상태 보기</a></td>
+            <td><button value="\{{id}}" id="reservation-state">예약 상태 보기</button></td>
         </tr>
         \{{/each}}
         </tbody>
