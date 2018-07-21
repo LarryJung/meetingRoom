@@ -2,9 +2,6 @@ package com.larry.meetingroomreservation.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.larry.meetingroomreservation.domain.entity.support.AbstractEntity;
-import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
-import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
-import com.larry.meetingroomreservation.domain.exceptions.ExcessAttendeeException;
 import com.larry.meetingroomreservation.domain.exceptions.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

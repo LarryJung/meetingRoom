@@ -1,7 +1,6 @@
 package com.larry.meetingroomreservation.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.larry.meetingroomreservation.domain.exceptions.EndTimeMustBeAfterStartTimeException;
 import com.larry.meetingroomreservation.domain.exceptions.ValidationException;
 import lombok.*;
 
