@@ -1,6 +1,7 @@
 package com.larry.meetingroomreservation.domain.validation;
 
 import com.larry.meetingroomreservation.domain.exceptions.ValidationException;
+import org.springframework.validation.FieldError;
 
 public class ErrorMsg<T> {
 
@@ -26,6 +27,12 @@ public class ErrorMsg<T> {
         this.field = exception.getField();
         this.value = (T) exception.getValue();
         this.message = exception.getMessage();
+    }
+
+    public ErrorMsg(FieldError error) {
+        this.field = error.getField();
+        this.value = (T) error.getRejectedValue();
+        this.message = error.getDefaultMessage();
     }
 
     public String getDocumentation_url() {

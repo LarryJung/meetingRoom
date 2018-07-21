@@ -5,7 +5,6 @@ import com.larry.meetingroomreservation.domain.entity.Reservation;
 import com.larry.meetingroomreservation.domain.entity.Room;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 

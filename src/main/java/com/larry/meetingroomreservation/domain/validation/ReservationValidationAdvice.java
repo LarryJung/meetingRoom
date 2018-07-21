@@ -22,10 +22,7 @@ public class ReservationValidationAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<ErrorMsg> handleValidationException(MethodArgumentNotValidException exception) {
         return exception.getBindingResult().getAllErrors().stream()
-                .map(error -> {
-                    FieldError fieldError = (FieldError) error;
-                    return new ErrorMsg(fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage());
-                }).collect(Collectors.toList());
+                .map(error -> new ErrorMsg((FieldError) error)).collect(Collectors.toList());
     }
 
     @ExceptionHandler(ValidationException.class)
