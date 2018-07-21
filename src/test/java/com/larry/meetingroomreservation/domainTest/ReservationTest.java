@@ -10,16 +10,16 @@ import com.larry.meetingroomreservation.domain.exceptions.EndTimeMustBeAfterStar
 import com.larry.meetingroomreservation.domain.exceptions.ExcessAttendeeException;
 import com.larry.meetingroomreservation.domain.exceptions.PossibleHourException;
 import com.larry.meetingroomreservation.domain.exceptions.ThirtyMinutesUnitException;
+import com.larry.meetingroomreservation.domain.exceptions.ValidationException;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
@@ -36,6 +36,9 @@ public class ReservationTest {
     private Room room101 = new Room(101, OCCUPANCY);
     private Reservation reservation;
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
     @Before
     public void setup() {
         reservation = Reservation.builder().booker(larry).reservedRoom(room101).build();
@@ -49,12 +52,14 @@ public class ReservationTest {
                 .meetingTime(meetingTime).build();
     }
 
-    @Test(expected = ThirtyMinutesUnitException.class)
+    @Test(expected = ValidationException.class)
     public void thirtyMinute_fail() {
         MeetingTime meetingTime = new MeetingTime(LocalDate.of(2018, 7, 18), new Period(LocalTime.of(10, 1), LocalTime.of(11, 0)));
         reservation = reservation.builder()
                 .numberOfAttendee(OCCUPANCY)
                 .meetingTime(meetingTime).build();
+        expectedEx.expect(ValidationException.class);
+        expectedEx.expectMessage("Employee ID is null");
     }
 
     @Test(expected = EndTimeMustBeAfterStartTimeException.class)
@@ -81,7 +86,6 @@ public class ReservationTest {
                 .meetingTime(meetingTime).build();
     }
 
-    // 얘는 validator 무언가를 사용하여 검증해야 할듯.
     @Test
     public void attendee_less_minimum() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

@@ -1,19 +1,25 @@
 package com.larry.meetingroomreservation.domain.exceptions;
 
+import com.larry.meetingroomreservation.domain.entity.MeetingTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class AlreadyReservedException extends RuntimeException{
 
-    public static final String DEFAULT_MESSAGE = "겹치는 시간입니다.";
+    private String field;
+    private MeetingTime value;
 
-    public AlreadyReservedException(String defaultMessage){
+    public AlreadyReservedException(String defaultMessage, String field, MeetingTime value){
         super(defaultMessage);
+        this.field = field;
+        this.value = value;
     }
 
-    public AlreadyReservedException(){
-        super(DEFAULT_MESSAGE);
+    public String getField() {
+        return field;
     }
 
+    public MeetingTime getValue() {
+        return value;
+    }
 }

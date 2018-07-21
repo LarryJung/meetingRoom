@@ -2,6 +2,7 @@ package com.larry.meetingroomreservation.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.larry.meetingroomreservation.domain.exceptions.EndTimeMustBeAfterStartTimeException;
+import com.larry.meetingroomreservation.domain.exceptions.ValidationException;
 import lombok.*;
 
 import javax.persistence.AttributeOverride;
@@ -37,7 +38,7 @@ public class Period {
         assertNotNull(startTime);
         assertNotNull(endTime);
         if (!endTime.isAfter(startTime)) {
-            throw new EndTimeMustBeAfterStartTimeException("시작시간은 끝나는 시간 이전이어야 합니다.");
+            throw new ValidationException("시작시간은 끝나는 시간 이전이어야 합니다.", "time", this);
         }
         this.startTime = startTime;
         this.endTime = endTime;

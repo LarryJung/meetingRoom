@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -25,6 +26,7 @@ public class ReservationRequestDto {
     @DateTimeFormat
     private LocalTime endTime;
 
+    @Min(3)
     private Integer numberOfAttendee;
 
     public ReservationRequestDto() {

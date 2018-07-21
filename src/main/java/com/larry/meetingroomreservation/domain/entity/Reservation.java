@@ -5,6 +5,7 @@ import com.larry.meetingroomreservation.domain.entity.support.AbstractEntity;
 import com.larry.meetingroomreservation.domain.exceptions.AlreadyReservedException;
 import com.larry.meetingroomreservation.domain.exceptions.CannotReserveSameBookerPerDayException;
 import com.larry.meetingroomreservation.domain.exceptions.ExcessAttendeeException;
+import com.larry.meetingroomreservation.domain.exceptions.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class Reservation extends AbstractEntity{
     public Reservation(MeetingTime meetingTime, Integer numberOfAttendee, Room room) {
         this.meetingTime = meetingTime;
         if (!room.isPossibleAttendeeNumber(numberOfAttendee)) {
-            throw new ExcessAttendeeException(String.format("인원 초과입니다. 허용인원 : %d", room.getOccupancy()));
+            throw new ValidationException(String.format("인원 초과입니다. 허용인원 : %d", room.getOccupancy()), "numberOfAttendee", numberOfAttendee);
         }
         this.numberOfAttendee = numberOfAttendee;
         this.reservedRoom = room;
@@ -54,10 +55,10 @@ public class Reservation extends AbstractEntity{
 
     public boolean isOverlap(Reservation target) {
         if (this.booker.equals(target.booker)) {
-            throw new CannotReserveSameBookerPerDayException("예약은 해당 날짜에 1번만 가능합니다.");
+            throw new ValidationException("예약은 해당 날짜에 1번만 가능합니다.", "booker", target.booker.getUserId());
         }
         if (this.meetingTime.isTimeOverlap(target.meetingTime)) {
-            throw new AlreadyReservedException("겹치는 시간입니다.");
+            throw new ValidationException("겹치는 시간입니다.", "time", meetingTime);
         }
         return false;
     }
