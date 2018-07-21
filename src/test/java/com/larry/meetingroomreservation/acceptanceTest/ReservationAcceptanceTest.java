@@ -63,6 +63,13 @@ public class ReservationAcceptanceTest {
         assertThat(response.getBody().getReservedDate(), is(reservedDate));
     }
 
+    @Test
+    public void register_fail_duplicate_time() {
+
+    }
+
+
+
     public <T> List<T> convertList(ResponseEntity<List> response, Class<T> clazz) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
