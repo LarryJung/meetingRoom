@@ -9,31 +9,10 @@
 <p id="day"> {{day}}</p> 회의실 예약 현황
 <p id="room-name"> {{room.roomName}}</p> 회의실 예약 현황 <br>
 수용 인원 <p id="occupancy">{{room.occupancy}}</p>
-<p id="room-id" hidden > {{room.id}}</p>
+<p id="room-id" hidden> {{room.id}}</p>
 
 <button type="button" class="btn btn-primary" id="previous-date" value="\{{id}}">전날</button>
 <button type="button" class="btn btn-primary" id="next-date" value="\{{id}}">다음날</button>
-
-<script id="entry-template" type="text/x-handlebars-template">
-    <table>
-        <thead>
-        <th style="text-align:center">시작 시간</th>
-        <th style="text-align:center">종료 시간</th>
-        <th style="text-align:center">예약자</th>
-        <th style="text-align:center">기능</th>
-        </thead>
-        <tbody>
-        \{{#each .}}
-        <tr>
-            <td>\{{start_time}}</td>
-            <td style="text-align:center">\{{end_time}}</td>
-            <td style="text-align:center">\{{booker.userId}}</td>
-            <td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">취소</button></td>
-        </tr>
-        \{{/each}}
-        </tbody>
-    </table>
-</script>
 
 <form id="reservation-form" action="/api/reservations/{{day}}/rooms/{{room.id}}">
     <div class="form-group">
@@ -54,6 +33,30 @@
     </div>
     <button type="button" class="btn btn-primary" id="btnSave">등록</button>
 </form>
+
+
+<table id="reservation-table">
+    <thead>
+        <th style="text-align:center">시작 시간</th>
+        <th style="text-align:center">종료 시간</th>
+        <th style="text-align:center">예약자</th>
+        <th style="text-align:center">기능</th>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script id="entry-template" type="text/x-handlebars-template">
+    \{{#each .}}
+    <tr id="template-row">
+        <td id="template-start-time">\{{start_time}}</td>
+        <td id="template-end-time" style="text-align:center">\{{end_time}}</td>
+        <td id="template-booker" style="text-align:center">\{{booker.userId}}</td>
+        <td id="template-reservation-id">
+            <button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">취소</button>
+        </td>
+    </tr>
+    \{{/each}}
+</script>
 
 <script type="text/javascript" src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/show.js"></script>

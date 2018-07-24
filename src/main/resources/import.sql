@@ -1,4 +1,4 @@
-INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (1, 'larry', 'test', 'jung', 'larry@gmail.com', 'ADMIN');
+INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (1, 'larry', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'jung', 'larry@gmail.com', 'ADMIN');
 INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (2, 'charry', 'test', 'chae', 'charry@gmail.com', 'USER');
 
 INSERT INTO ROOM (id, room_name, occupancy) VALUES (1, 101, 5);

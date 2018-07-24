@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -31,7 +33,7 @@ public class ReservationController {
     private RoomService roomService;
 
     @GetMapping("/{reservedDate}/rooms/{roomId}")
-    public ResponseEntity<List<Reservation>> retrieveReservation(@PathVariable String reservedDate, @PathVariable Long roomId) {
+    public ResponseEntity<List<Reservation>> retrieveReservations(@PathVariable String reservedDate, @PathVariable Long roomId) {
         List<Reservation> reservations = reservationService.findAllByDateAndRoomId(reservedDate, roomId);
         log.info("found reservations : {}", reservations);
         return ResponseEntity.ok()
@@ -46,6 +48,9 @@ public class ReservationController {
         log.info("reserved dto : {}", reservationDto);
         Reservation reservation = reservationService.reserve(loginUser, reservationDto, room);
         URI url = URI.create(String.format("/api/reservations/%s/rooms/%d", reservedDate, reservation.getId()));
-        return ResponseEntity.created(url).body(reservation);
+        return ResponseEntity.created(url)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(reservation);
     }
+
 }

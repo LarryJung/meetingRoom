@@ -4,11 +4,8 @@
 // });
 
 $(document).ready(function () {
-    console.log('야이야이이이')
     var source = $("#entry-template").html();
-    console.log(source);
     var template = Handlebars.compile(source);
-    console.log(template);
     var date = $("#day").text().trim();
     var roomId = $("#room-id").text().trim();
     var url = "/api/reservations/"+date+"/rooms/"+roomId;
@@ -19,7 +16,8 @@ $(document).ready(function () {
     }).then(function (data) {
         console.log(data);
         var html = template(data);
-        $('body').append(html);
+        console.log(html);
+        $('#reservation-table tbody').append(html);
     });
 });
 
@@ -34,23 +32,25 @@ $('#btnSave').click(function (e) {
     console.log(reservation);
     $.ajax({
         url: $("#reservation-form").attr("action"),
-        method: 'POST',
+        type: 'POST',
         data: JSON.stringify(reservation),
+        dataType: 'json',
         contentType: "application/json; charset=utf-8",
-        success: function () {
-            redirect("/");
+        success: function (data) {
+            console.log(data);
+            myCreateFunction(data);
+            // redirect("/");
         }
     });
 });
 
-// $(document).ready(function() {
-//     $('#show-reservation').click(function(){
-//         var url = "../templates/reservation/show";
-//         console.log(url);
-//         alert($(this).attr("value"));
-//         redirect(url);
-//     });
-// });
+function myCreateFunction(data) {
+    var source = $("#entry-template").html();
+    var template = Handlebars.compile(source);
+    var html = template([data]);
+    console.log(html);
+    $("#reservation-table").last().append(html);
+}
 
 function redirect(url) {
     window.location.replace(url);
