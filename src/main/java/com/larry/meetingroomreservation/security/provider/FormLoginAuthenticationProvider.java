@@ -2,7 +2,6 @@ package com.larry.meetingroomreservation.security.provider;
 
 import com.larry.meetingroomreservation.domain.entity.User;
 import com.larry.meetingroomreservation.domain.repository.UserRepository;
-import com.larry.meetingroomreservation.security.token.PostAuthorizationToken;
 import com.larry.meetingroomreservation.security.token.PreAuthorizationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +25,9 @@ public class FormLoginAuthenticationProvider implements AuthenticationProvider {
     private UserRepository userRepository;
 
     @Override
-    public Authentication authenticate(Authentication authentication) {
+    public Authentication authenticate(Authentication preAuthenticationToken) {
 
-        PreAuthorizationToken token = (PreAuthorizationToken)authentication;
+        PreAuthorizationToken token = (PreAuthorizationToken)preAuthenticationToken;
 
         String userId = token.getUserId();
         String password = token.getUserPassword();
@@ -37,7 +36,7 @@ public class FormLoginAuthenticationProvider implements AuthenticationProvider {
 
         if(isCorrectPassword(password, user)) {
             log.info("인증 성공");
-            return PostAuthorizationToken.converseTokenFromUser(user);
+            return ((PreAuthorizationToken)preAuthenticationToken).toPostToken(user.getRoleName());
         }
         throw new NoSuchElementException("인증 정보가 정확하지 않습니다.");
     }

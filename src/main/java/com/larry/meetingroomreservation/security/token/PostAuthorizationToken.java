@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -14,16 +15,8 @@ import java.util.stream.Collectors;
 
 public class PostAuthorizationToken extends UsernamePasswordAuthenticationToken {
 
-    private PostAuthorizationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public PostAuthorizationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(principal, credentials, authorities);
-    }
-
-    public static Authentication converseTokenFromUser(User user) {
-        return new PostAuthorizationToken(user.getUserId(), user.getPassword(), parseAuthorities(user.getRoleName()));
-    }
-
-    private static List<SimpleGrantedAuthority> parseAuthorities(RoleName role) {
-        return Arrays.asList(role).stream().map(r -> new SimpleGrantedAuthority(r.name())).collect(Collectors.toList());
     }
 
     public String getUserId() {

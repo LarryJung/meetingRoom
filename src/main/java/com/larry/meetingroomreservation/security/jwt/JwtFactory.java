@@ -1,5 +1,7 @@
 package com.larry.meetingroomreservation.security.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.larry.meetingroomreservation.domain.entity.support.RoleName;
 import com.larry.meetingroomreservation.security.token.PostAuthorizationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
@@ -8,24 +10,22 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtFactory {
 
-    private final Logger log = LoggerFactory.getLogger(JwtFactory.class);
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    static final String CLAIM_KEY_USERNAME = "sub";
-    static final String CLAIM_KEY_CREATED = "iat";
-    private static final long serialVersionUID = -3301605591108950415L;
+    private final Logger log = LoggerFactory.getLogger(JwtFactory.class);
 
     //??
 //    @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
@@ -40,7 +40,7 @@ public class JwtFactory {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String getUsernameFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -50,6 +50,17 @@ public class JwtFactory {
 
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
+    }
+
+    public List<RoleName> getUserRoles(String token) {
+        return getClaimFromToken(token, "authorities").stream().map(r -> RoleName.valueOf(r)).collect(Collectors.toList());
+    }
+
+    public List<String> getClaimFromToken(String token, String claimName) {
+        final Claims claims = getAllClaimsFromToken(token);
+        log.info("auth token : {}", claims.get(claimName, String.class));
+        String authorities = claims.get(claimName, String.class);
+        return Arrays.asList(authorities.substring(1, authorities.length() - 1).replaceAll("\\s", "").split(","));
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -79,21 +90,15 @@ public class JwtFactory {
     }
 
     public String generateToken(Authentication auth) {
-        Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, auth);
-    }
-
-    private String doGenerateToken(Map<String, Object> claims, Authentication auth) {
-        log.info("make token.. : {}", ((PostAuthorizationToken)auth).getUserId());
         final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
-        // claim에 아무것도 담겨있지 않는게 찜찜하다. set말고 맵에 수동으로 담아 줄 수도 있을텐데.
+        log.info("roles : {}", auth.getAuthorities());
         return Jwts.builder()
-                .setClaims(claims)
                 .setIssuer(issuer)
                 .setSubject(((PostAuthorizationToken)auth).getUserId())
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
+                .claim("authorities", auth.getAuthorities().toString())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -118,21 +123,19 @@ public class JwtFactory {
                 .compact();
     }
 
-//    public Boolean validateToken(String token, UserDetails userDetails) {
-//        JwtUser user = (JwtUser) userDetails;
-//        final String username = getUsernameFromToken(token);
-//        final Date created = getIssuedAtDateFromToken(token);
-//        //final Date expiration = getExpirationDateFromToken(token);
-//        return (
-//                username.equals(user.getUsername())
-//                        && !isTokenExpired(token)
-//                        && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
-//        );
-//    }
-
-    private Date calculateExpirationDate(Date createdDate) {
-        return new Date(createdDate.getTime() + expiration * 1000);
+    public Boolean isValidateToken(String token) {
+        final String userId = getUserIdFromToken(token);
+        if (userId == null) {
+            throw new RuntimeException("토큰의 계정 이름이 담겨있지 않습니다.");
+        }
+        if (isTokenExpired(token)) {
+            throw new RuntimeException("토큰이 만료되었습니다.");
+        }
+        return true;
     }
 
-
+    private Date calculateExpirationDate(Date createdDate) {
+        log.info("date is null? : {}", createdDate);
+        return new Date(createdDate.getTime() + expiration * 1000);
+    }
 }

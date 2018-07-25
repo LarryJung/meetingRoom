@@ -1,0 +1,5 @@
+GET http://localhost:8080/api/users/hello
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJMYXJyeUJpeiIsInN1YiI6ImxhcnJ5IiwiaWF0IjoxNTMyNDk1ODE4LCJleHAiOjE1MzMxMDA2MTgsImF1dGhvcml0aWVzIjoiW0FETUlOLCBVU0VSXSJ9.wvJKcihwOxRET_dCi_DJSEC9NfzbHPBheTQFtY48o5n5o_lDZ-Isvl0HiddxNTpqQQuabi_2MZP8APaxGzP6lA
+
+###
+

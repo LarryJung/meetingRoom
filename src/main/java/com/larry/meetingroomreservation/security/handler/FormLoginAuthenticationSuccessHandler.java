@@ -1,5 +1,7 @@
 package com.larry.meetingroomreservation.security.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.larry.meetingroomreservation.security.dto.LoginJwtResponseDto;
 import com.larry.meetingroomreservation.security.jwt.JwtFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +24,23 @@ public class FormLoginAuthenticationSuccessHandler implements AuthenticationSucc
     @Autowired
     private JwtFactory jwtFactory;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication auth) throws IOException {
         String token = jwtFactory.generateToken(auth);
         log.info("token : {}", token);
-        processResponse(res, token);
+        processResponse(res, writeDto(token));
     }
 
-    private void processResponse(HttpServletResponse res, String token) throws IOException {
+    private LoginJwtResponseDto writeDto(String token) {
+        return new LoginJwtResponseDto(token);
+    }
+
+    private void processResponse(HttpServletResponse res, LoginJwtResponseDto token) throws IOException {
         res.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         res.setStatus(HttpStatus.OK.value());
-        res.getWriter().write(token);
+        res.getWriter().write(objectMapper.writeValueAsString(token));
     }
 }
