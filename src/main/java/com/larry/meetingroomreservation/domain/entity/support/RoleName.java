@@ -2,6 +2,6 @@ package com.larry.meetingroomreservation.domain.entity.support;
 
 public enum RoleName {
 
-    ADMIN, USER
+    ROLE_ADMIN, ROLE_USER
 
 }

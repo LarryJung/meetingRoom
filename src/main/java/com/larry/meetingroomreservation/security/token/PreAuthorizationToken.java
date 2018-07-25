@@ -31,10 +31,7 @@ public class PreAuthorizationToken extends UsernamePasswordAuthenticationToken {
     }
 
     public Authentication toPostToken(RoleName roleName) {
-        List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority("ADMIN"));
-        list.add(new SimpleGrantedAuthority("USER"));
-        return new PostAuthorizationToken(getUserId(), getUserPassword(), list);
+        return new PostAuthorizationToken(getUserId(), getUserPassword(), parseAuthorities(roleName));
     }
 
     private static List<SimpleGrantedAuthority> parseAuthorities(RoleName role) {

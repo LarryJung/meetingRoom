@@ -26,8 +26,8 @@ public class ReservationTest {
 
     private final Logger log = LoggerFactory.getLogger(ReservationTest.class);
 
-    private User larry = new User("larry", "test", "jung", "larry@gmail.com", RoleName.ADMIN);
-    private User charry = new User("charry", "test", "chae", "charry@gmail.com", RoleName.USER);
+    private User larry = new User("larry", "test", "jung", "larry@gmail.com", RoleName.ROLE_ADMIN);
+    private User charry = new User("charry", "test", "chae", "charry@gmail.com", RoleName.ROLE_USER);
     private final int OCCUPANCY = 5;
     private Room room101 = new Room(101, OCCUPANCY);
     private Reservation reservation;

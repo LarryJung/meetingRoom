@@ -26,8 +26,8 @@ public class JwtPreAuthorizationToken extends UsernamePasswordAuthenticationToke
         return new JwtPostAuthorizationToken(getUserId(), getToken(), parseAuthorities(userRoles));
     }
 
-    private static List<SimpleGrantedAuthority> parseAuthorities(List<RoleName> role) {
-        return role.stream().map(r -> new SimpleGrantedAuthority(r.name())).collect(Collectors.toList());
+    private static List<SimpleGrantedAuthority> parseAuthorities(List<RoleName> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.name())).collect(Collectors.toList());
     }
 
 }

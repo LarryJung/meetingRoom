@@ -1,5 +1,7 @@
-INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (1, 'larry', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'jung', 'larry@gmail.com', 'ADMIN');
-INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (2, 'charry', 'test', 'chae', 'charry@gmail.com', 'USER');
+-- larry admin
+-- charry password
+INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (1, 'larry', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'jung', 'larry@gmail.com', 'ROLE_ADMIN');
+INSERT INTO USER (id, user_id, password, name, email, role_name) VALUES (2, 'charry', '$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC', 'chae', 'charry@gmail.com', 'ROLE_USER');
 
 INSERT INTO ROOM (id, room_name, occupancy) VALUES (1, 101, 5);
 INSERT INTO ROOM (id, room_name, occupancy) VALUES (2, 102, 5);

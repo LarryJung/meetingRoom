@@ -14,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -43,7 +41,7 @@ public class ReservationController {
 
     @PostMapping("/{reservedDate}/rooms/{roomId}")
     public ResponseEntity<Reservation> registerReservation(@RequestBody @Valid ReservationRequestDto reservationDto, @PathVariable String reservedDate, @PathVariable Long roomId) {
-        User loginUser = new User("larry", "test", "jung", "larry@gmail.com", RoleName.ADMIN);
+        User loginUser = new User("larry", "test", "jung", "larry@gmail.com", RoleName.ROLE_ADMIN);
         Room room = roomService.findById(roomId);
         log.info("reserved dto : {}", reservationDto);
         Reservation reservation = reservationService.reserve(loginUser, reservationDto, room);
