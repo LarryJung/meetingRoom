@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+//    ㄷ
     @GetMapping("/hello")
     public String getUsername(Authentication authentication) {
         JwtPostAuthorizationToken token = (JwtPostAuthorizationToken)authentication;

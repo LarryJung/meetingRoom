@@ -35,7 +35,7 @@ public class PreAuthorizationToken extends UsernamePasswordAuthenticationToken {
     }
 
     private static List<SimpleGrantedAuthority> parseAuthorities(RoleName role) {
-        return Arrays.asList(role).stream().map(r -> new SimpleGrantedAuthority(r.name())).collect(Collectors.toList());
+        return role.getScopes().stream().map(s -> new SimpleGrantedAuthority(s.name())).collect(Collectors.toList());
     }
 
 }

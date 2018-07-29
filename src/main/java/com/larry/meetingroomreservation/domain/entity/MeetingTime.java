@@ -9,7 +9,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import java.time.LocalDate;
 
-
 @Data
 @Setter
 @Getter

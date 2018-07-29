@@ -3,12 +3,15 @@ package com.larry.meetingroomreservation.security.config;
 import com.larry.meetingroomreservation.security.filter.FilterSkipMatcher;
 import com.larry.meetingroomreservation.security.filter.FormLoginFilter;
 import com.larry.meetingroomreservation.security.filter.JwtAuthenticationFilter;
+import com.larry.meetingroomreservation.security.filter.SocialLoginFilter;
 import com.larry.meetingroomreservation.security.handler.FormLoginAuthenticationSuccessHandler;
 import com.larry.meetingroomreservation.security.jwt.HeaderTokenExtractor;
 import com.larry.meetingroomreservation.security.provider.FormLoginAuthenticationProvider;
 import com.larry.meetingroomreservation.security.provider.JwtAuthenticationProvider;
+import com.larry.meetingroomreservation.security.provider.SocialLoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private FormLoginAuthenticationProvider provider;
+
+    @Autowired
+    private SocialLoginAuthenticationProvider socialProvider;
 
     @Autowired
     private JwtAuthenticationProvider jwtProvider;
@@ -55,11 +61,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
+    protected SocialLoginFilter socialFilter() throws Exception {
+        SocialLoginFilter filter = new SocialLoginFilter("/socialLogin", formLoginAuthenticationSuccessHandler);
+        filter.setAuthenticationManager(super.authenticationManagerBean());
+        return filter;
+    }
+
     // 매니저는 프로바이더에 의존하고 있으니 그것을 해 주어야 한다. 메소드의 인자를 보고 생각해보면 된다.
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .authenticationProvider(this.provider)
+                .authenticationProvider(this.socialProvider)
                 .authenticationProvider(this.jwtProvider);
     }
 
@@ -69,6 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/me", "/h2-console/**", "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/*").access("hasRole('USER')")
                 .and().headers().frameOptions().sameOrigin()
                 .and().csrf().disable();
 
@@ -78,6 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(socialFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

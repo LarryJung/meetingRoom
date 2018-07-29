@@ -2,14 +2,17 @@ package com.larry.meetingroomreservation.domain.entity;
 
 import com.larry.meetingroomreservation.domain.entity.support.AbstractEntity;
 import com.larry.meetingroomreservation.domain.entity.support.RoleName;
-import lombok.Builder;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.List;
 
+@Data
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User extends AbstractEntity{
 
@@ -26,57 +29,15 @@ public class User extends AbstractEntity{
     @Column
     private String email;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
-    public User() {
+    @Column
+    private String socialId;
 
-    }
+    @Column
+    private String profileHref;
 
-    @Builder
-    public User(String userId, String password, String name, String email, RoleName roleName) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.roleName = roleName;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public RoleName getRoleName() {
-        return roleName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(email, user.email) &&
-                roleName == user.roleName;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(userId, password, name, email, roleName);
-    }
+    @Enumerated(value = EnumType.STRING)
+    private SocialProviders socialProvider;
 }
