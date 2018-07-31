@@ -11,7 +11,4 @@ public class JwtPostAuthorizationToken extends UsernamePasswordAuthenticationTok
         super(principal, credentials, authorities);
     }
 
-    public String getUserId() {
-        return (String) getPrincipal();
-    }
 }

@@ -17,7 +17,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.UUID;
 
 @Component
@@ -45,18 +44,18 @@ public class SocialLoginAuthenticationProvider implements AuthenticationProvider
     private User getAccount(SocialLoginDto dto) {
         SocialUserProperty property = socialFetchService.getSocialUserInfo(dto);
         log.info("properties : {}", property.getUserNickname());
-        String userId = property.getUserId();
+        String socialId = property.getSocialId();
         SocialProviders provider = dto.getProvider();
-        log.info("userid / prrovider : {}, {}", userId, provider.getUserinfoEndpoint());
-        return userRepository.findBySocialIdAndSocialProvider(userId, provider)
+        log.info("userid / provider : {}, {}", socialId, provider.getUserinfoEndpoint());
+        return userRepository.findBySocialIdAndSocialProvider(socialId, provider)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
-                                .userId("SOCIAL_USER")
+                                .userId(property.getUserNickname())
                                 .password(String.valueOf(UUID.randomUUID().getMostSignificantBits()))
-                                .name(property.getUserNickname())
+                                .name("SOCIAL_USER")
                                 .email(property.getEmail())
                                 .roleName(RoleName.ROLE_USER)
-                                .socialId(userId)
+                                .socialId(socialId)
                                 .profileHref(property.getProfileHref())
                                 .socialProvider(provider)
                                 .build()));

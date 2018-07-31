@@ -20,7 +20,7 @@ public class KakaoUserProperty implements SocialUserProperty{
 
 
     @Override
-    public String getUserId() {
+    public String getSocialId() {
         return userUniqueId.toString();
     }
 

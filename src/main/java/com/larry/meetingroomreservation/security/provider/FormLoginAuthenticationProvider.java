@@ -36,7 +36,7 @@ public class FormLoginAuthenticationProvider implements AuthenticationProvider {
 
         if(isCorrectPassword(password, user)) {
             log.info("인증 성공");
-            return ((PreAuthorizationToken)preAuthenticationToken).toPostToken(user.getRoleName());
+            return ((PreAuthorizationToken)preAuthenticationToken).toPostToken(user);
         }
         throw new NoSuchElementException("인증 정보가 정확하지 않습니다.");
     }

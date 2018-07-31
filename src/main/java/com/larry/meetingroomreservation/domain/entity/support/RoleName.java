@@ -3,13 +3,13 @@ package com.larry.meetingroomreservation.domain.entity.support;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.larry.meetingroomreservation.domain.entity.support.RoleName.Scope.ADMIN;
-import static com.larry.meetingroomreservation.domain.entity.support.RoleName.Scope.USER;
+import static com.larry.meetingroomreservation.domain.entity.support.RoleName.Scope.SCOPE_ADMIN;
+import static com.larry.meetingroomreservation.domain.entity.support.RoleName.Scope.SCOPE_USER;
 
 public enum RoleName {
 
-    ROLE_ADMIN(Arrays.asList(ADMIN, USER)),
-    ROLE_USER(Arrays.asList(USER));
+    ROLE_ADMIN(Arrays.asList(SCOPE_ADMIN, SCOPE_USER)),
+    ROLE_USER(Arrays.asList(SCOPE_USER));
 
     List<Scope> scopes;
 
@@ -22,6 +22,6 @@ public enum RoleName {
     }
 
     public enum Scope {
-        ADMIN, USER
+        SCOPE_ADMIN, SCOPE_USER
     }
 }

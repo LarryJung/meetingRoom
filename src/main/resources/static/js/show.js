@@ -29,6 +29,11 @@ $('#btnSave').click(function (e) {
         endTime: $('#end-time').val(),
         numberOfAttendee: $('#number-of-attendee').val(),
     };
+    var token = localStorage.getItem('token');
+    //Setup headers here and than call ajax
+    $.ajaxSetup({
+        headers: {'Authorization': 'Bearer '+ token}
+    });
     console.log(reservation);
     $.ajax({
         url: $("#reservation-form").attr("action"),

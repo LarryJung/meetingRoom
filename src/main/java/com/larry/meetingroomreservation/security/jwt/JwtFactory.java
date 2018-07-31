@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtFactory {
@@ -40,8 +39,8 @@ public class JwtFactory {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String getUserIdFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+    public Long getIdFromToken(String token) {
+        return Long.valueOf(getClaimFromToken(token, Claims::getSubject));
     }
 
     public Date getIssuedAtDateFromToken(String token) {
@@ -52,15 +51,14 @@ public class JwtFactory {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    public List<RoleName> getUserRoles(String token) {
-        return getClaimFromToken(token, "authorities").stream().map(r -> RoleName.valueOf(r)).collect(Collectors.toList());
+    public List<RoleName.Scope> getUserRoles(String token) {
+        return RoleName.valueOf(getClaimFromToken(token, "authority")).getScopes();
     }
 
-    public List<String> getClaimFromToken(String token, String claimName) {
+    public String getClaimFromToken(String token, String claimName) {
         final Claims claims = getAllClaimsFromToken(token);
         log.info("auth token : {}", claims.get(claimName, String.class));
-        String authorities = claims.get(claimName, String.class);
-        return Arrays.asList(authorities.substring(1, authorities.length() - 1).replaceAll("\\s", "").split(","));
+        return claims.get(claimName, String.class);
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -95,10 +93,11 @@ public class JwtFactory {
         log.info("roles : {}", auth.getAuthorities());
         return Jwts.builder()
                 .setIssuer(issuer)
-                .setSubject(((PostAuthorizationToken)auth).getUserId())
+                .setSubject(String.valueOf(((PostAuthorizationToken)auth).getId()))
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
-                .claim("authorities", auth.getAuthorities().toString())
+                .claim("userId", ((PostAuthorizationToken) auth).getUserName())
+                .claim("authority", ((List)auth.getAuthorities()).get(0).toString())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -124,8 +123,8 @@ public class JwtFactory {
     }
 
     public Boolean isValidateToken(String token) {
-        final String userId = getUserIdFromToken(token);
-        if (userId == null) {
+        final Long id = getIdFromToken(token);
+        if (id == null) {
             throw new RuntimeException("토큰의 계정 이름이 담겨있지 않습니다.");
         }
         if (isTokenExpired(token)) {

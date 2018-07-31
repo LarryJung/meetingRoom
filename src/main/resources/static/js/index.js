@@ -1,11 +1,11 @@
-$(document).ready(function () {
-    $.ajax({
-        url: "/api/users/1"
-    }).then(function (data) {
-        $('.user-id').append(data.userId);
-        $('.user-email').append(data.email);
-    });
-});
+// $(document).ready(function () {
+//     $.ajax({
+//         url: "/api/users/1"
+//     }).then(function (data) {
+//         $('.user-id').append(data.userId);
+//         $('.user-email').append(data.email);
+//     });
+// });
 
 $(document).ready(function () {
     var source = $("#entry-template").html();

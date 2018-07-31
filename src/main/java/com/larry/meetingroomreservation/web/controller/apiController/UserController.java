@@ -26,11 +26,10 @@ public class UserController {
         User user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
-
-//    ㄷ
-    @GetMapping("/hello")
-    public String getUsername(Authentication authentication) {
-        JwtPostAuthorizationToken token = (JwtPostAuthorizationToken)authentication;
-        return token.getUserId();
-    }
+//
+//    @GetMapping("/hello")
+//    public String getUsername(Authentication authentication) {
+//        JwtPostAuthorizationToken token = (JwtPostAuthorizationToken)authentication;
+////        return token.;
+//    }
 }

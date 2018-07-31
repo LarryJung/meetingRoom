@@ -7,8 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SocialPreAuthorizationToken extends UsernamePasswordAuthenticationToken {
 
@@ -21,10 +23,10 @@ public class SocialPreAuthorizationToken extends UsernamePasswordAuthenticationT
     }
 
     public Authentication toPostToken(User user) {
-        return new PostAuthorizationToken(user.getSocialId(), user.getPassword(), parseAuthorities(user.getRoleName()));
+        return new PostAuthorizationToken((user.getId()), user.getName(), parseAuthorities(user.getRoleName()));
     }
 
     private static List<SimpleGrantedAuthority> parseAuthorities(RoleName role) {
-        return role.getScopes().stream().map(s -> new SimpleGrantedAuthority(s.name())).collect(Collectors.toList());
+        return Stream.of(role).map(s -> new SimpleGrantedAuthority(s.name())).collect(Collectors.toList());
     }
 }

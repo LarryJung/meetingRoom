@@ -30,15 +30,13 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
-        JwtPreAuthorizationToken token = new JwtPreAuthorizationToken(this.extractor.extractUserId(request), this.extractor.extract(request));
+        JwtPreAuthorizationToken token = new JwtPreAuthorizationToken(this.extractor.extractId(request), this.extractor.extract(request));
         return super.getAuthenticationManager().authenticate(token);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-
+        SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
         chain.doFilter(request, response);

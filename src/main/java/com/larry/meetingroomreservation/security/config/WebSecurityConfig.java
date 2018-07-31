@@ -1,14 +1,13 @@
 package com.larry.meetingroomreservation.security.config;
 
-import com.larry.meetingroomreservation.security.filter.FilterSkipMatcher;
-import com.larry.meetingroomreservation.security.filter.FormLoginFilter;
-import com.larry.meetingroomreservation.security.filter.JwtAuthenticationFilter;
-import com.larry.meetingroomreservation.security.filter.SocialLoginFilter;
+import com.larry.meetingroomreservation.security.filter.*;
 import com.larry.meetingroomreservation.security.handler.FormLoginAuthenticationSuccessHandler;
 import com.larry.meetingroomreservation.security.jwt.HeaderTokenExtractor;
 import com.larry.meetingroomreservation.security.provider.FormLoginAuthenticationProvider;
 import com.larry.meetingroomreservation.security.provider.JwtAuthenticationProvider;
 import com.larry.meetingroomreservation.security.provider.SocialLoginAuthenticationProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -22,11 +21,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
+import java.util.List;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final Logger log = LoggerFactory.getLogger(WebSecurityConfig.class);
 
     @Autowired
     private FormLoginAuthenticationSuccessHandler formLoginAuthenticationSuccessHandler;
@@ -48,20 +49,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    protected FormLoginFilter formLoginFilter() throws Exception {
+    private FormLoginFilter formLoginFilter() throws Exception {
         FormLoginFilter filter = new FormLoginFilter("/formLogin", formLoginAuthenticationSuccessHandler);
         filter.setAuthenticationManager(super.authenticationManagerBean());
         return filter;
     }
 
-    protected JwtAuthenticationFilter jwtFilter() throws Exception {
-        FilterSkipMatcher matcher = new FilterSkipMatcher(Arrays.asList("/formLogin"), "/api/**");
+    private List<AntMatcherForm> passPatterns = AntMatcherFormChain.patternBuilder()
+            .antMatchers("/formLogin", HttpMethod.GET)
+            .antMatchers("/api/rooms*", HttpMethod.GET)
+            .antMatchers("/api/reservations/*/rooms/*", HttpMethod.GET)
+            .antMatchers("/error", HttpMethod.POST).build();
+
+    private List<AntMatcherForm> processPatterns = AntMatcherFormChain.patternBuilder()
+            .antMatchers("/api/**", HttpMethod.GET)
+            .antMatchers("/api/**", HttpMethod.POST).build();
+
+    private JwtAuthenticationFilter jwtFilter() throws Exception {
+        log.info("json web token filter start");
+        FilterSkipMatcher matcher = new FilterSkipMatcher(passPatterns, processPatterns);
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(matcher, headerTokenExtractor);
         filter.setAuthenticationManager(super.authenticationManagerBean());
         return filter;
     }
 
-    protected SocialLoginFilter socialFilter() throws Exception {
+    private SocialLoginFilter socialFilter() throws Exception {
         SocialLoginFilter filter = new SocialLoginFilter("/socialLogin", formLoginAuthenticationSuccessHandler);
         filter.setAuthenticationManager(super.authenticationManagerBean());
         return filter;
@@ -80,20 +92,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .authorizeRequests()
-                .antMatchers("/", "/me", "/h2-console/**", "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/*").access("hasRole('USER')")
-                .and().headers().frameOptions().sameOrigin()
+                .headers().frameOptions().sameOrigin()
                 .and().csrf().disable();
-
         http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http
                 .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(socialFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+        http
+                .authorizeRequests()
+                    .antMatchers("/", "/me", "/h2-console/**", "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/reservations/*/rooms/*").access("hasRole('SCOPE_USER')")
+                .anyRequest().permitAll();
+
     }
 
 }

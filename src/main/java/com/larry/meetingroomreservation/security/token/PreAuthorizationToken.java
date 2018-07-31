@@ -1,5 +1,6 @@
 package com.larry.meetingroomreservation.security.token;
 
+import com.larry.meetingroomreservation.domain.entity.User;
 import com.larry.meetingroomreservation.domain.entity.support.RoleName;
 import com.larry.meetingroomreservation.security.dto.FormLoginDto;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,8 +31,8 @@ public class PreAuthorizationToken extends UsernamePasswordAuthenticationToken {
         return (String)super.getCredentials();
     }
 
-    public Authentication toPostToken(RoleName roleName) {
-        return new PostAuthorizationToken(getUserId(), getUserPassword(), parseAuthorities(roleName));
+    public Authentication toPostToken(User user) {
+        return new PostAuthorizationToken(user.getId(), getUserPassword(), parseAuthorities(user.getRoleName()));
     }
 
     private static List<SimpleGrantedAuthority> parseAuthorities(RoleName role) {

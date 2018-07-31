@@ -5,16 +5,18 @@ import com.larry.meetingroomreservation.domain.entity.Room;
 import com.larry.meetingroomreservation.domain.entity.User;
 import com.larry.meetingroomreservation.domain.entity.dto.ReservationRequestDto;
 import com.larry.meetingroomreservation.domain.entity.support.RoleName;
+import com.larry.meetingroomreservation.security.token.JwtPostAuthorizationToken;
+import com.larry.meetingroomreservation.security.token.PostAuthorizationToken;
 import com.larry.meetingroomreservation.service.ReservationService;
 import com.larry.meetingroomreservation.service.RoomService;
 import com.larry.meetingroomreservation.service.UserService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,11 +48,13 @@ public class ReservationController {
                 .body(reservations);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
     @PostMapping("/{reservedDate}/rooms/{roomId}")
-    public ResponseEntity<Reservation> registerReservation(@AuthenticationPrincipal String userId, @RequestBody @Valid ReservationRequestDto reservationDto, @PathVariable String reservedDate, @PathVariable Long roomId) {
-        log.info("principal : {}", userId);
-        User loginUser = userService.findByUserId(userId);
+    public ResponseEntity<Reservation> registerReservation(Authentication authentication, @AuthenticationPrincipal Long id, @RequestBody @Valid ReservationRequestDto reservationDto, @PathVariable String reservedDate, @PathVariable Long roomId) {
+        JwtPostAuthorizationToken token = (JwtPostAuthorizationToken)authentication;
+        log.info("authorities {}", token.getAuthorities());
+        log.info("principal (id) : {}", id);
+        User loginUser = userService.findById(id);
         Room room = roomService.findById(roomId);
         log.info("reserved dto : {}", reservationDto);
         Reservation reservation = reservationService.reserve(loginUser, reservationDto, room);

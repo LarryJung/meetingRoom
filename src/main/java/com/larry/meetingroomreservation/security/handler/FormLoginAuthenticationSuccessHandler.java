@@ -9,9 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,8 +32,8 @@ public class FormLoginAuthenticationSuccessHandler implements AuthenticationSucc
     private ObjectMapper objectMapper;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication auth) throws IOException {
-        String token = jwtFactory.generateToken(auth);
+    public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication authResult) throws IOException, ServletException {
+        String token = jwtFactory.generateToken(authResult);
         log.info("token : {}", token);
         processResponse(res, writeDto(token));
     }

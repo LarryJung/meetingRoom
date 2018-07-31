@@ -3,16 +3,62 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="/js/link/handlebars-v4.0.11.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <title>회의실 예약 사이트</title>
 </head>
 <body>
-안녕
+<h1>이 페이지는 회의실 예약을 가능하게 합니다.</h1>
+<a id="kakao-login-btn"></a>
+<!--<a href="http://developers.kakao.com/logout"></a>-->
+<script type='text/javascript'>
+    Kakao.init('ede4e12eaae1e1783add651fd719afdb');
+    // 카카오 로그인 버튼을 생성합니다.
+    Kakao.Auth.createLoginButton({
+        container: '#kakao-login-btn',
+        success: function(authObj) {
+            console.log(authObj.access_token);
+            var socialLoginDto = {
+                provider: 'KAKAO',
+                token: authObj.access_token,
+            };
+            $.ajax({
+                url: '/socialLogin',
+                type: 'POST',
+                data: JSON.stringify(socialLoginDto),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    console.log(response);
+                    var token = response.token;
+                    localStorage.setItem("token",token); // 이름이 필요없고, 그냥 token으로 저장됨.
+                }
+            });
+            // alert(JSON.stringify(authObj));
+        },
+        fail: function(err) {
+            alert(JSON.stringify(err));
+        }
+    });
 
-<div>
-    <p class="user-id">The ID is </p>
-    <p class="user-email">The email is </p>
-</div>
-
+function kakaoLogin(authObj) {
+    var socialLoginDto = {
+        provider: 'KAKAO',
+        token: authObj.access_token,
+    };
+    $.ajax({
+        url: '/socialLogin',
+        type: 'POST',
+        data: JSON.stringify(socialLoginDto),
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            console.log(data);
+        }
+    });
+}
+</script>
+<br>
+<br>
 <script id="entry-template" type="text/x-handlebars-template">
     <table>
         <thead>
