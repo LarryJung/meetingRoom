@@ -63,7 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private List<AntMatcherForm> processPatterns = AntMatcherFormChain.patternBuilder()
             .antMatchers(HttpMethod.GET, "/api/**")
-            .antMatchers(HttpMethod.POST, "/api/**").build();
+            .antMatchers(HttpMethod.POST, "/api/**")
+            .antMatchers(HttpMethod.DELETE, "/api/**").build();
 
     private JwtAuthenticationFilter jwtFilter() throws Exception {
         log.info("json web token filter start");

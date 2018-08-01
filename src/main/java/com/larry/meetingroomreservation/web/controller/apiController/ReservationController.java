@@ -58,4 +58,12 @@ public class ReservationController {
                 .body(reservation);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @DeleteMapping("/{reservedDate}/rooms/{roomId}")
+    public ResponseEntity<Void> cancelReservation(@AuthenticationPrincipal Long id, @RequestParam String reservationId) {
+        log.info("reservation id : {}", reservationId);
+        reservationService.deleteById(id, Long.valueOf(reservationId));
+        return ResponseEntity.ok().build();
+    }
+
 }

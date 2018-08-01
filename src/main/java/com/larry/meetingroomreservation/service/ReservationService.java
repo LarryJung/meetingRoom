@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -46,4 +48,11 @@ public class ReservationService {
         return reservations.stream().noneMatch(r -> r.isOverlap(reservation));
     }
 
+    @Transactional
+    public void deleteById(Long bookerId, Long reservationId) {
+        log.info("reservation delete by id");
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
+        reservation.isRightBooker(bookerId);
+        reservationRepository.deleteById(reservationId);
+    }
 }

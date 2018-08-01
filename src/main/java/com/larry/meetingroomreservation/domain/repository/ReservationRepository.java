@@ -12,4 +12,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 
     List<Reservation> findAllByMeetingTimeReservedDateAndReservedRoomId(LocalDate reservedDate, Long reservedRoomId);
     List<Reservation> findAllByMeetingTimeReservedDateAndReservedRoom(LocalDate reservedDate, Room reservedRoom);
+    void deleteById(Long reservationId);
 }

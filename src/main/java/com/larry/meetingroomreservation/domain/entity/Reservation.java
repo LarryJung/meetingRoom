@@ -25,11 +25,11 @@ public class Reservation extends AbstractEntity{
     @Embedded
     private MeetingTime meetingTime;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn
     private Room reservedRoom;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn
     private User booker;
 
@@ -94,5 +94,12 @@ public class Reservation extends AbstractEntity{
                 ", booker=" + booker.getUserId() +
                 ", numberOfAttendee=" + numberOfAttendee +
                 '}';
+    }
+
+    public boolean isRightBooker(Long bookerId) {
+        if (!booker.getId().equals(bookerId)) {
+            throw new RuntimeException("예약자 정보가 일치하지 않아 취소할 수 없습니다.");
+        }
+        return true;
     }
 }
