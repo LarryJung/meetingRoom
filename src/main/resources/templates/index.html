@@ -1,56 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="/js/link/handlebars-v4.0.11.js"></script>
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script type="text/javascript" src="webjars/jquery/3.3.1-1/jquery.min.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-    <title>회의실 예약 사이트</title>
+    {{> duplicates/head}}
 </head>
 <body>
-<div class="container">
-    <h1>이 페이지는 회의실 예약을 가능하게 합니다.</h1>
-    <div class="alert alert-danger" id="notLoggedIn">Not logged in!</div>
-    <a id="kakao-login-btn"></a>
-    <br>
-    <button type="button" class="btn btn-default" id="logoutBtn">logout</button>
-    <!--<a href="http://developers.kakao.com/logout"></a>-->
-    <br>
-
-    <div class="col-md-12 col-centered text-center" id="content" style="align-content: center">
-    </div>
-
+    {{> duplicates/userStatus}}
+<div class="container position-fixed">
+    <div id="tableContent"></div>
 </div>
 
 <script id="entry-template" type="text/x-handlebars-template">
-    <table>
+    <table class="table table-bordered text-center">
         <thead>
-        <th>회의실</th>
-        <th>수용 인원</th>
-        <th>기능</th>
+        <th class="text-center align-middle">회의실</th>
+        <th class="text-center align-middle">수용 인원</th>
+        <th class="text-center align-middle">기능</th>
         </thead>
         <tbody>
         \{{#each .}}
         <tr>
-            <td>\{{roomName}}</td>
-            <td style="text-align:center">\{{occupancy}}</td>
+            <td class="align-middle">\{{roomName}}</td>
+            <td class="align-middle">\{{occupancy}}</td>
             <!--<td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">예약 상황</button></td>-->
-            <td>
-                <button value="\{{id}}" id="reservation-state">예약 상태 보기</button>
+            <td class="align-middle">
+                <button class="btn btn-default" value="\{{id}}" id="reservation-state">예약 상태 보기</button>
             </td>
         </tr>
         \{{/each}}
         </tbody>
     </table>
 </script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/aboutLogin.js"></script>
 </body>
 </html>

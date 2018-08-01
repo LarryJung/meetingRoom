@@ -1,49 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="/js/link/handlebars-v4.0.11.js"></script>
-    <title>회의실 예약 사이트</title>
+    {{> duplicates/head}}
 </head>
 <body>
-<p id="day"> {{day}}</p> 회의실 예약 현황
-<p id="room-name"> {{room.roomName}}</p> 회의실 예약 현황 <br>
-수용 인원 <p id="occupancy">{{room.occupancy}}</p>
-<p id="room-id" hidden> {{room.id}}</p>
-
-<button type="button" class="btn btn-primary" id="previous-date" value="\{{id}}">전날</button>
-<button type="button" class="btn btn-primary" id="next-date" value="\{{id}}">다음날</button>
-
-<form id="reservation-form" action="/api/reservations/{{day}}/rooms/{{room.id}}">
-    <div class="form-group">
-        <label for="reserved-date"> 예약 날짜 </label>
-        <input type="date" class="form-control" id="reserved-date">
+{{> duplicates/userStatus}}
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            아래는 회의실 <strong>{{room.roomName}}</strong>호 의 예약 현황입니다. 원하시는 날짜와 시간을 지정하신 후 예약을 진행해주십시오.
+        </div>
+        <div class="panel-body">
+            <p id="day"> {{day}}</p> 회의실 예약 현황
+            <p id="room-name"> {{room.roomName}}</p> 회의실 예약 현황 <br>
+            수용 인원 <p id="occupancy">{{room.occupancy}}</p>
+            <p id="room-id" hidden> {{room.id}}</p>
+            <button type="button" class="btn btn-primary" id="previous-date" value="\{{id}}">전날</button>
+            <button type="button" class="btn btn-primary" id="next-date" value="\{{id}}">다음날</button>
+            <form id="reservation-form" action="/api/reservations/{{day}}/rooms/{{room.id}}">
+                <div class="form-group">
+                    <label for="reserved-date"> 예약 날짜 </label>
+                    <input type="date" class="form-control" id="reserved-date">
+                </div>
+                <div class="form-group">
+                    <label for="start-time"> 시작 시간 </label>
+                    <input type="time" class="form-control" id="start-time">
+                </div>
+                <div class="form-group">
+                    <label for="end-time"> 종료 시간</label>
+                    <input type="time" class="form-control" id="end-time">
+                </div>
+                <div class="form-group">
+                    <label for="number-of-attendee"> 참여 인원 </label>
+                    <input type="number" class="form-control" id="number-of-attendee" placeholder="참여 인원 수를 적어주세요">
+                </div>
+                <button type="button" class="btn btn-primary" id="btnSave">등록</button>
+            </form>
+        </div>
+        <div id="reservationTable">
+            <table class="table" id="reservation-table">
+                <thead>
+                <th style="text-align:center">시작 시간</th>
+                <th style="text-align:center">종료 시간</th>
+                <th style="text-align:center">예약자</th>
+                <th style="text-align:center">기능</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="start-time"> 시작 시간 </label>
-        <input type="time" class="form-control" id="start-time">
-    </div>
-    <div class="form-group">
-        <label for="end-time"> 종료 시간</label>
-        <input type="time" class="form-control" id="end-time">
-    </div>
-    <div class="form-group">
-        <label for="number-of-attendee"> 참여 인원 </label>
-        <input type="number" class="form-control" id="number-of-attendee" placeholder="참여 인원 수를 적어주세요">
-    </div>
-    <button type="button" class="btn btn-primary" id="btnSave">등록</button>
-</form>
-
-
-<table id="reservation-table">
-    <thead>
-        <th style="text-align:center">시작 시간</th>
-        <th style="text-align:center">종료 시간</th>
-        <th style="text-align:center">예약자</th>
-        <th style="text-align:center">기능</th>
-    </thead>
-    <tbody></tbody>
-</table>
+</div>
 
 <script id="entry-template" type="text/x-handlebars-template">
     \{{#each .}}
@@ -58,8 +64,8 @@
     \{{/each}}
 </script>
 
-<script type="text/javascript" src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/show.js"></script>
+<script type="text/javascript" src="/js/aboutLogin.js"></script>
 
 </body>
 </html>
