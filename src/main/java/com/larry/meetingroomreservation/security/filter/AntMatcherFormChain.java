@@ -15,7 +15,7 @@ public class AntMatcherFormChain {
 
         private List<AntMatcherForm> matcherForms = new ArrayList<>();
 
-        public PatternBuilder antMatchers(String pattern, HttpMethod method) {
+        public PatternBuilder antMatchers(HttpMethod method, String pattern) {
             matcherForms.add(AntMatcherForm.of(pattern, method));
             return this;
         }
@@ -24,6 +24,4 @@ public class AntMatcherFormChain {
             return matcherForms;
         }
     }
-
-
 }

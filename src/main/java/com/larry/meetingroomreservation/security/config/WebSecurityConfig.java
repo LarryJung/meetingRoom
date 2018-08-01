@@ -56,14 +56,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private List<AntMatcherForm> passPatterns = AntMatcherFormChain.patternBuilder()
-            .antMatchers("/formLogin", HttpMethod.GET)
-            .antMatchers("/api/rooms*", HttpMethod.GET)
-            .antMatchers("/api/reservations/*/rooms/*", HttpMethod.GET)
-            .antMatchers("/error", HttpMethod.POST).build();
+            .antMatchers(HttpMethod.GET, "/formLogin")
+            .antMatchers(HttpMethod.GET, "/api/rooms*")
+            .antMatchers(HttpMethod.GET, "/api/reservations/*/rooms/*")
+            .antMatchers(HttpMethod.POST, "/error").build();
 
     private List<AntMatcherForm> processPatterns = AntMatcherFormChain.patternBuilder()
-            .antMatchers("/api/**", HttpMethod.GET)
-            .antMatchers("/api/**", HttpMethod.POST).build();
+            .antMatchers(HttpMethod.GET, "/api/**")
+            .antMatchers(HttpMethod.POST, "/api/**").build();
 
     private JwtAuthenticationFilter jwtFilter() throws Exception {
         log.info("json web token filter start");

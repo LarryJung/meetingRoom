@@ -29,7 +29,6 @@ public class FilterSkipMatcher implements RequestMatcher {
         if (passPatterns.matches(req)) {
             return false;
         }
-        log.info("asdf");
         return processingPatterns.matches(req);
     }
 }

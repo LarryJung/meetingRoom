@@ -4,61 +4,33 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="/js/link/handlebars-v4.0.11.js"></script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
     <title>회의실 예약 사이트</title>
 </head>
 <body>
-<h1>이 페이지는 회의실 예약을 가능하게 합니다.</h1>
-<a id="kakao-login-btn"></a>
-<!--<a href="http://developers.kakao.com/logout"></a>-->
-<script type='text/javascript'>
-    Kakao.init('ede4e12eaae1e1783add651fd719afdb');
-    // 카카오 로그인 버튼을 생성합니다.
-    Kakao.Auth.createLoginButton({
-        container: '#kakao-login-btn',
-        success: function(authObj) {
-            console.log(authObj.access_token);
-            var socialLoginDto = {
-                provider: 'KAKAO',
-                token: authObj.access_token,
-            };
-            $.ajax({
-                url: '/socialLogin',
-                type: 'POST',
-                data: JSON.stringify(socialLoginDto),
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    console.log(response);
-                    var token = response.token;
-                    localStorage.setItem("token",token); // 이름이 필요없고, 그냥 token으로 저장됨.
-                }
-            });
-            // alert(JSON.stringify(authObj));
-        },
-        fail: function(err) {
-            alert(JSON.stringify(err));
-        }
-    });
+<div class="container">
+    <h1>이 페이지는 회의실 예약을 가능하게 합니다.</h1>
+    <div class="alert alert-danger" id="notLoggedIn">Not logged in!</div>
+    <a id="kakao-login-btn"></a>
+    <br>
+    <button type="button" class="btn btn-default" id="logoutBtn">logout</button>
+    <!--<a href="http://developers.kakao.com/logout"></a>-->
+    <br>
 
-function kakaoLogin(authObj) {
-    var socialLoginDto = {
-        provider: 'KAKAO',
-        token: authObj.access_token,
-    };
-    $.ajax({
-        url: '/socialLogin',
-        type: 'POST',
-        data: JSON.stringify(socialLoginDto),
-        dataType: 'json',
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
-            console.log(data);
-        }
-    });
-}
-</script>
-<br>
-<br>
+    <div class="col-md-12 col-centered text-center" id="content" style="align-content: center">
+    </div>
+
+</div>
+
 <script id="entry-template" type="text/x-handlebars-template">
     <table>
         <thead>
@@ -72,18 +44,13 @@ function kakaoLogin(authObj) {
             <td>\{{roomName}}</td>
             <td style="text-align:center">\{{occupancy}}</td>
             <!--<td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">예약 상황</button></td>-->
-            <td><button value="\{{id}}" id="reservation-state">예약 상태 보기</button></td>
+            <td>
+                <button value="\{{id}}" id="reservation-state">예약 상태 보기</button>
+            </td>
         </tr>
         \{{/each}}
         </tbody>
     </table>
 </script>
-
-<div id="content"></div>
-
-<script type="text/javascript" src="webjars/jquery/3.3.1-1/jquery.min.js"></script>
-
-<script type="text/javascript" src="js/index.js"></script>
-
 </body>
 </html>
