@@ -21,8 +21,11 @@ public class HeaderTokenExtractor {
     public String extract(HttpServletRequest request) {
         log.info("path , method : {}, {} ", request.getPathInfo(), request.getMethod());
         String payload = request.getHeader("Authorization");
-        if(StringUtils.isEmpty(payload) | payload.length() < HEADER_PREFIX.length()) {
-            throw new RuntimeException("올바른 토큰 정보가 아닙니다.");
+        if(StringUtils.isEmpty(payload)) {
+            throw new RuntimeException("토큰이 들어있지 않습니다.");
+        }
+        if (payload.length() < HEADER_PREFIX.length()) {
+            throw new RuntimeException("토큰 길이가 유효하지 않습니다. : " + payload);
         }
         return payload.substring(HEADER_PREFIX.length(), payload.length());
     }

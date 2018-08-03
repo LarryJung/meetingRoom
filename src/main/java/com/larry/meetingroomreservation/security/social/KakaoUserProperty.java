@@ -18,7 +18,6 @@ public class KakaoUserProperty implements SocialUserProperty{
     @JsonProperty("properties")
     private Map<String, String> userProperties;
 
-
     @Override
     public String getSocialId() {
         return userUniqueId.toString();

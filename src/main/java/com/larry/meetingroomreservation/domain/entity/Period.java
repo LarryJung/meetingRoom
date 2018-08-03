@@ -39,7 +39,6 @@ public class Period {
         if (!endTime.isAfter(startTime)) {
             throw new ValidationException("시작시간은 끝나는 시간 이전이어야 합니다.", "time", this);
         }
-
         this.startTime = startTime;
         this.endTime = endTime;
     }

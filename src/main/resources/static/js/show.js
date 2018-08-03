@@ -77,8 +77,9 @@ $(document).on("click", "#btnCancel", function (e) {
     var select = $(this);
     var currentUrl = window.location.href;
     var relativeUrl = currentUrl.replace("http://localhost:8080", "");
+    var aa = $('#template-booker');
     console.log("reservation id : " + select.attr('value'));
-    var cancelUrl = "/api" + relativeUrl + '?' + $.param({"reservationId": select.attr('value')});
+    var cancelUrl = "/api" + relativeUrl + '?' + $.param({"reservationId": select.attr('value'), "bookerId": aa.attr('content')});
     console.log(cancelUrl);
     var token = localStorage.getItem('token');
     $.ajaxSetup({
@@ -90,6 +91,9 @@ $(document).on("click", "#btnCancel", function (e) {
         success: function (data) {
             console.log(data);
             select.closest('tr').remove();
+        },
+        error: function (data) {
+            alert("예약 취소 에러!")
         }
     });
 });
@@ -119,7 +123,9 @@ $(document).on("click", "#btnSave", function (e) {
             if(getToday() == data.reservedDate) {
                 myCreateFunction(data);
             }
-
+        },
+        error: function (data) {
+            alert("예약 등 에러!")
         }
     });
 });

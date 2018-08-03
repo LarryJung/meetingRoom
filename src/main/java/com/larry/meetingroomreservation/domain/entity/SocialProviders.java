@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 public enum SocialProviders {
 
-    // 이 .class는 왜 필요한거지?
     KAKAO("https://kapi.kakao.com/v1/user/me", KakaoUserProperty.class);
 
     private String userinfoEndpoint;

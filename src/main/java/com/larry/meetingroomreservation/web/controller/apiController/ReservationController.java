@@ -58,9 +58,9 @@ public class ReservationController {
                 .body(reservation);
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    @PreAuthorize("hasAuthority('SCOPE_USER') or (id == bookerId)")
     @DeleteMapping("/{reservedDate}/rooms/{roomId}")
-    public ResponseEntity<Void> cancelReservation(@AuthenticationPrincipal Long id, @RequestParam String reservationId) {
+    public ResponseEntity<Void> cancelReservation(@AuthenticationPrincipal Long id, @RequestParam String reservationId, @RequestParam String bookerId) {
         log.info("reservation id : {}", reservationId);
         reservationService.deleteById(id, Long.valueOf(reservationId));
         return ResponseEntity.ok().build();

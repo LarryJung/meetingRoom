@@ -51,8 +51,12 @@ public class ReservationService {
     @Transactional
     public void deleteById(Long bookerId, Long reservationId) {
         log.info("reservation delete by id");
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
-        reservation.isRightBooker(bookerId);
+        Reservation reservation = findById(reservationId);
+//        reservation.isRightBooker(bookerId);
         reservationRepository.deleteById(reservationId);
+    }
+
+    public Reservation findById(Long id) {
+        return reservationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

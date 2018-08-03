@@ -20,7 +20,6 @@ public class User extends AbstractEntity{
     private String userId;
 
     @Column(nullable = false)
-    // 패스워드 커스텀 어노테이션 만들어보기
     private String password;
 
     @Column(nullable = false)

@@ -23,7 +23,7 @@ public class SocialPreAuthorizationToken extends UsernamePasswordAuthenticationT
     }
 
     public Authentication toPostToken(User user) {
-        return new PostAuthorizationToken((user.getId()), user.getName(), parseAuthorities(user.getRoleName()));
+        return new PostAuthorizationToken(user.getId(), user.getName(), parseAuthorities(user.getRoleName()));
     }
 
     private static List<SimpleGrantedAuthority> parseAuthorities(RoleName role) {
