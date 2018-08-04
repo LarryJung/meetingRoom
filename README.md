@@ -25,3 +25,8 @@
  
 구현 예정
 - 유저 그룹 등록, 회의실 예약 시 푸시 알림 및 구글 캘린더 표시
+
+**구현 시 참고**
+1. 스프링 시큐리티
+- https://www.youtube.com/watch?v=SMZm2aqI_dQ
+- https://github.com/szerhusenBC/jwt-spring-security-demo 
