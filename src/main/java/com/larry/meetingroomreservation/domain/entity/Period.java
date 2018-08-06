@@ -14,7 +14,6 @@ import java.time.LocalTime;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Data
-@Setter
 @Getter
 @Embeddable
 public class Period {
@@ -47,7 +46,12 @@ public class Period {
         this(new ThirtyMinuteUnit(startTime), new ThirtyMinuteUnit(endTime));
     }
 
-    public boolean isTimeOverlap(Period target) {
-        return target.endTime.isAfter(this.startTime) && this.endTime.isAfter(target.startTime);
+    public boolean isPeriodOverlap(Period target) {
+        return this.isAfter(target) && target.isAfter(this);
     }
+
+    private boolean isAfter(Period target) {
+        return target.endTime.isAfter(this.startTime);
+    }
+
 }

@@ -46,15 +46,15 @@ public class Reservation extends AbstractEntity{
         this.reservedRoom = room;
     }
 
-    public Reservation(LocalDate reservedDate, LocalTime startTime, LocalTime endTime, Integer numberOfAttendee, Room room) {
-        this(new MeetingTime(reservedDate, new Period(startTime, endTime)), numberOfAttendee, room);
+    public static Reservation fromDto(LocalDate reservedDate, LocalTime startTime, LocalTime endTime, Integer numberOfAttendee, Room room) {
+        return new Reservation(new MeetingTime(reservedDate, new Period(startTime, endTime)), numberOfAttendee, room);
     }
 
     public boolean isOverlap(Reservation target) {
         if (this.booker.equals(target.booker)) {
             throw new ValidationException("예약은 해당 날짜에 1번만 가능합니다.", "booker", target.booker.getUserId());
         }
-        if (this.meetingTime.isTimeOverlap(target.meetingTime)) {
+        if (this.meetingTime.isMeetingTimeOverlap(target.meetingTime)) {
             throw new ValidationException("겹치는 시간입니다.", "time", meetingTime);
         }
         return false;
@@ -67,6 +67,13 @@ public class Reservation extends AbstractEntity{
 
     public LocalDate getReservedDate() {
         return this.meetingTime.getReservedDate();
+    }
+
+    public boolean isRightBooker(Long bookerId) {
+        if (!booker.getId().equals(bookerId)) {
+            throw new RuntimeException("예약자 정보가 일치하지 않아 취소할 수 없습니다.");
+        }
+        return true;
     }
 
     @Override
@@ -96,10 +103,4 @@ public class Reservation extends AbstractEntity{
                 '}';
     }
 
-    public boolean isRightBooker(Long bookerId) {
-        if (!booker.getId().equals(bookerId)) {
-            throw new RuntimeException("예약자 정보가 일치하지 않아 취소할 수 없습니다.");
-        }
-        return true;
-    }
 }

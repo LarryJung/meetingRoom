@@ -40,7 +40,7 @@ public class ReservationRequestDto {
     }
 
     public Reservation toEntity(Room room) {
-        return new Reservation(reservedDate, startTime, endTime, numberOfAttendee, room);
+        return Reservation.fromDto(reservedDate, startTime, endTime, numberOfAttendee, room);
     }
 
 }

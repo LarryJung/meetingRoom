@@ -10,7 +10,6 @@ import javax.persistence.Embedded;
 import java.time.LocalDate;
 
 @Data
-@Setter
 @Getter
 @Embeddable
 public class MeetingTime {
@@ -32,7 +31,7 @@ public class MeetingTime {
         this.period = period;
     }
 
-    public boolean isTimeOverlap(MeetingTime target) {
-        return this.reservedDate.equals(target.reservedDate) && (this.period.isTimeOverlap(target.period));
+    public boolean isMeetingTimeOverlap(MeetingTime target) {
+        return this.reservedDate.equals(target.reservedDate) && (this.period.isPeriodOverlap(target.period));
     }
 }
