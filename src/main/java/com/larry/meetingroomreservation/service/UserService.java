@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -14,24 +15,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @PostConstruct
-    private void iniDataForTesting() {
-        User larry = User.builder()
-                .userId("larry")
-                .password("test")
-                .name("jung")
-                .email("larry@gmail.com")
-                .roleName(RoleName.ADMIN)
-                .build();
-        User charry = User.builder()
-                .userId("charry")
-                .password("test")
-                .name("chae")
-                .roleName(RoleName.USER)
-                .email("charry@gmail.com").build();
-
-        userRepository.save(larry);
-        userRepository.save(charry);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    public User findByUserId(String userId) {
+        return userRepository.findByUserId(userId).orElseThrow(EntityNotFoundException::new);
+    }
 }

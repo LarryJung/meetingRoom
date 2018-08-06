@@ -14,11 +14,8 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private boolean reservable = true;
-
-    @Column(nullable = false)
-    private String roomName;
+    @Column(nullable = false, unique = true)
+    private Integer roomName;
 
     @Min(3)
     @Column(nullable = false)
@@ -29,7 +26,7 @@ public class Room {
     }
 
     @Builder
-    public Room(String roomName, int occupancy) {
+    public Room(int roomName, int occupancy) {
         this.roomName = roomName;
         this.occupancy = occupancy;
     }
@@ -38,11 +35,7 @@ public class Room {
         return id;
     }
 
-    public boolean isReservable() {
-        return reservable;
-    }
-
-    public String getRoomName() {
+    public Integer getRoomName() {
         return roomName;
     }
 
@@ -50,20 +43,32 @@ public class Room {
         return occupancy;
     }
 
+    public boolean isPossibleAttendeeNumber(int numberOfAttendee) {
+        return occupancy >= numberOfAttendee;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return reservable == room.reservable &&
-                occupancy == room.occupancy &&
-                Objects.equals(id, room.id) &&
-                Objects.equals(roomName, room.roomName);
+        return Objects.equals(id, room.id) &&
+                Objects.equals(roomName, room.roomName) &&
+                Objects.equals(occupancy, room.occupancy);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, reservable, roomName, occupancy);
+        return Objects.hash(id, roomName, occupancy);
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", roomName=" + roomName +
+                ", occupancy=" + occupancy +
+                '}';
     }
 }

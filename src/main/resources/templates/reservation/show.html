@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> duplicates/head}}
+</head>
+<body>
+{{> duplicates/userStatus}}
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            아래는 회의실 <strong>{{room.roomName}}</strong>호 의 예약 현황입니다. 원하시는 날짜와 시간을 지정하신 후 예약을 진행해주십시오.
+            <a href="/">  메인 페이지로 돌아가기</a>
+        </div>
+        <div class="panel-body">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-default btn-lg center-block" id="previousDay">
+                        <p><strong>Prev day</strong></p>
+                        <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <div class="page-header">
+                        <h3><span id="day"> {{day}}</span>
+                            <small> 날짜로 예약 하실 수 있습니다.</small>
+                        </h3>
+                    </div>
+                    <div class="page-header">
+                        <h3>최대 <span id="occupancy">{{room.occupancy}}명</span>
+                            <small>까지 수용 가능합니다. (최소 3명)</small>
+                        </h3>
+                    </div>
+                    <span id="room-id" hidden> {{room.id}}</span>
+                </div>
+                <div class="col-md-3">
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-default btn-lg center-block" id="nextDay">
+                        <p><strong>Next day</strong></p>
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+                    </button>
+                    <!--<button type="button" class="btn btn-primary" id="next-date" value="\{{id}}">다음날</button>-->
+                </div>
+            </div>
+            <div class="container-fluid">
+                <form class="form-horizontal" id="reservation-form"
+                      action="/api/reservations/{{day}}/rooms/{{room.id}}">
+                    <div class="form-group">
+                        <label for="reserved-date" class="col-sm-4 control-label"> 예약 날짜 </label>
+                        <div class="col-sm-5">
+                            <input type="date" class="form-control" id="reserved-date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="start-time" class="col-sm-4 control-label"> 시작 시간 </label>
+                        <div class="col-sm-5">
+                            <input type="time" class="form-control" id="start-time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-time" class="col-sm-4 control-label"> 종료 시간</label>
+                        <div class="col-sm-5">
+                            <input type="time" class="form-control" id="end-time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="number-of-attendee" class="col-sm-4 control-label"> 참여 인원 </label>
+                        <div class="col-sm-5">
+                            <input type="number" class="form-control" id="number-of-attendee"
+                                   placeholder="참여 인원 수를 적어주세요">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block" id="btnSave">등록</button>
+
+                    <!--<button type="button" class="btn btn-default btn-lg center-block" id="btnSave">등록</button>-->
+                </form>
+            </div>
+        </div>
+        <div class="container-fluid" id="reservationTable">
+            <table class="table table-bordered text-center" id="reservation-table">
+                <thead>
+                <th style="text-align:center">시작 시간</th>
+                <th style="text-align:center">종료 시간</th>
+                <th style="text-align:center">예약자</th>
+                <th style="text-align:center">기능</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script id="entry-template" type="text/x-handlebars-template">
+    \{{#each .}}
+    <tr id="template-row">
+        <td id="template-start-time">\{{start_time}}</td>
+        <td id="template-end-time" style="text-align:center">\{{end_time}}</td>
+        <td id="template-booker" style="text-align:center">\{{booker.userId}}</td>
+        <td id="template-reservation-id">
+            <button type="button" class="btn btn-danger btn-sm" id="btnCancel" value="\{{id}}" content="\{{booker.id}}">취소</button>
+        </td>
+    </tr>
+    \{{/each}}
+</script>
+<script type="text/javascript" src="/js/show.js"></script>
+<script type="text/javascript" src="/js/aboutLogin.js"></script>
+</body>
+</html>

@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>회의실 예약 사이트</title>
+    {{> duplicates/head}}
 </head>
 <body>
-안녕
+    {{> duplicates/userStatus}}
+<div class="container position-fixed">
+    <div id="tableContent"></div>
+</div>
+
+<script id="entry-template" type="text/x-handlebars-template">
+    <table class="table table-bordered text-center">
+        <thead>
+        <th class="text-center align-middle">회의실</th>
+        <th class="text-center align-middle">수용 인원</th>
+        <th class="text-center align-middle">기능</th>
+        </thead>
+        <tbody>
+        \{{#each .}}
+        <tr>
+            <td class="align-middle">\{{roomName}}</td>
+            <td class="align-middle">\{{occupancy}}</td>
+            <!--<td><button type="button" class="btn btn-primary" id="show-reservation" value="\{{id}}">예약 상황</button></td>-->
+            <td class="align-middle">
+                <button class="btn btn-default" value="\{{id}}" id="reservation-state">예약 상태 보기</button>
+            </td>
+        </tr>
+        \{{/each}}
+        </tbody>
+    </table>
+</script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/aboutLogin.js"></script>
 </body>
 </html>
